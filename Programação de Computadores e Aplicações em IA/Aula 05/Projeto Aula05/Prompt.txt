@@ -1,0 +1,45 @@
+Quero que você crie um Go(Wéiqí) simplicado, 9x9 em html
+
+No nome deve aparecer "Go" e ao lado o seu equivalente chinês em símbolos mandarim.
+
+Oq você debve saber:
+
+-As regras sãos as mesmas que Go normal, só que o tabuleiro será em 9x9.
+-Ao todo serão 41 peças pretas e 40 peças brancas, ao todo 81.
+
+    O que vc deve fzr:
+
+    Criar um menu inicial fazendo display do nome do jogo (Wéiqí)
+    Abaixo dele dever estar os nomes de Nathan e Éricles. ( Quem estão fazendo o jogo)
+    No menu deve ter 3 botões:
+        Botão de Regras(Explica as regras)
+        Botão de Jogador vs Jogador(
+            Ao clicar, o Jogador 1 poderá escolher entre: X, Circulo, Quadrado ou Triangulo para ser sua peça representante, e uma cor(Preto ou Branco)
+            Depois, o Jogador 2 poderá escolher entre as X, Circulo. Quadrado ou Triangulo tbm,porém a cor restante será obrigatoriamente sua.
+            
+            Em seguida, o jogo poder ser começado.(
+                Nesta tela deve ter as opções de reiniciar o jogo, sem precisar recarregar a página.
+                O botão de regras tbm caso os jogadores queiram consultar.
+                Voltar ao menu inicial (O que mostra o nome do jogo e os botões inciais)
+                Um placar, que vai contando as vitórias dos jogadores e também de quem é a vez.
+                Demonstrar quantas peças restantes um jogador tem para jogar ( O jogador que escolher preto fica com 41, o de branco fica com 40)
+                Quando um jogador vencer , aparecerá as opções de reiniciar (Que deletará as informações do placar),
+                ou, jogar novamente, e o placar dever manter as informações e ir para próxima rodada.
+            )
+        )
+        Botão de Jogador vs IA (
+            O jogador poderá escolher uma IA de dificuldade fácil, média ou difícil,
+            A sua peça, entre X, Circulo, Quadrado ou Triangulo, com opção de voltar
+            sua cor, entre preto ou branco, opção de voltar
+            O jogo começa. 
+            O botões de reiniciar, regras e voltar ao menu prinicipal devem aparecer tbm.
+            Tudo que aparece na versão de Jogador vs Jogador deve aparecer também.
+        )
+    
+Durante o jogo:
+    Deve aparecer uma reprensentação visual de onde o você pode por a peça.
+
+
+
+Também quero explique, ensine e comente o porque de suas decisões de lógica. 
+Voc~e tem permissão para fazer sugestões, mas não para fazer nada que eu não tenha pedido neste prompt.
