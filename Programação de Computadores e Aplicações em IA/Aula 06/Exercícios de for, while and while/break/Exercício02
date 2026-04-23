@@ -1,0 +1,8 @@
+for i in range(1,251):
+    idade = int(input(f"Digite a idade{i}:"))
+    print(f"A idade foi: {idade}")
+print("Fim")
+
+#o valor de i vai ter um "range" de 1 até 251
+# no while você tem que escre i = 1 no iníco e i + 1 no final para código poder repetir,
+# no for in range, o programador entender que o vai ser peter de x até y (x,y)
