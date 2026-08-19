@@ -21,10 +21,17 @@ elif renda_liquida <= 4664.68:
     print("Alíquota de 22,5%")
 else:
     print("Alíquota de 27,5%")
+    aliquota = 0.275
 
 
 imposto =  renda_liquida * aliquota
 
 
+print("RESULTADO:")
+print(f"Nome: {nome}")
+print(f"CPF: {CPF}")
+print(f"Renda anual: R${renda_anual:.2f}")
+print(f"Número de dependentes: {numb_dependentes}")
 print(f"Renda mensal: R${renda_mensal:.2f}")
-print(f"imposto: R${imposto:.2f}")
+print(f"Imposto: R${imposto:.2f}")
+
