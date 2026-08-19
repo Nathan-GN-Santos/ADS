@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Go 围棋 (Wéiqí)</title>
+    <style>
+        :root {
+            --board-color: #deb887;
+            --line-color: #4a3728;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #2c3e50; color: white; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .hidden { display: none !important; }
+        
+        #main-menu, #setup-player, #rules-screen, #game-container {
+            background: #34495e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center; margin-top: 50px; width: 90%; max-width: 500px;
+        }
+
+        button { margin: 10px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; background: #3498db; color: white; transition: 0.3s; }
+        button:hover { background: #2980b9; }
+
+        /* Seleção de Formatos Estilo Foto 2 */
+        .symbol-grid { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
+        .symbol-opt { 
+            width: 60px; height: 60px; background: #fdfdfd; border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #ccc;
+            transition: 0.2s;
+        }
+        .symbol-opt.selected { border-color: #3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); background: #fff; }
+
+        /* Desenho dos Símbolos Sólidos (Foto 1) */
+        .shape-circle { width: 34px; height: 34px; border-radius: 50%; background: currentColor; }
+        .shape-square { width: 32px; height: 32px; border-radius: 6px; background: currentColor; }
+        .shape-triangle { 
+            width: 0; height: 0; 
+            border-left: 18px solid transparent; border-right: 18px solid transparent; 
+            border-bottom: 32px solid currentColor; border-radius: 4px;
+        }
+        .shape-x { position: relative; width: 32px; height: 32px; color: currentColor; }
+        .shape-x::before, .shape-x::after {
+            content: ''; position: absolute; top: 50%; left: 0; width: 32px; height: 8px;
+            background: currentColor; border-radius: 10px;
+        }
+        .shape-x::before { transform: translateY(-50%) rotate(45deg); }
+        .shape-x::after { transform: translateY(-50%) rotate(-45deg); }
+
+        /* Tabuleiro e Peças */
+        #board {
+            display: grid; grid-template-columns: repeat(9, 45px); grid-template-rows: repeat(9, 45px);
+            background: var(--board-color); padding: 5px; border: 4px solid #8b4513; margin: 20px auto;
+            position: relative;
+        }
+        .intersection {
+            width: 45px; height: 45px; position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        /* Linhas abaixo das peças */
+        .intersection::before { content: ""; position: absolute; width: 100%; height: 2px; background: var(--line-color); z-index: 1; }
+        .intersection::after { content: ""; position: absolute; height: 100%; width: 2px; background: var(--line-color); z-index: 1; }
+
+        .piece { z-index: 2; position: relative; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .piece.black { color: #000; }
+        .piece.white { color: #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); }
+        
+        .ghost { opacity: 0.4; }
+        #status-panel { margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-size: 0.9em; }
+        .captured-info { grid-column: span 2; border-top: 1px solid #555; padding-top: 5px; color: #ff7675; }
+    </style>
+</head>
+<body>
+
+    <div id="main-menu">
+        <h1>Go 围棋</h1>
+        <p>Criado por: Nathan e Éricles</p>
+        <button onclick="showRules()">Regras</button><br>
+        <button onclick="setupPVP()">Jogador vs Jogador</button><br>
+        <button onclick="setupIA()">Jogador vs IA</button>
+    </div>
+
+    <div id="rules-screen" class="hidden">
+        <h2>Regras do Go (9x9)</h2>
+        <p>Preencha o tabuleiro. Capture peças cercando-as. <br> Ao fim das 81 peças, quem tiver mais peças no tabuleiro vence.</p>
+        <button onclick="backToMenu()">Voltar</button>
+    </div>
+
+    <div id="setup-player" class="hidden">
+        <h3 id="setup-title">Jogador 1</h3>
+        <p>Escolha seu formato:</p>
+        <div class="symbol-grid" id="symbol-options">
+            <div class="symbol-opt" data-sym="circle" onclick="selectSymbol('circle')"><div class="shape-circle" style="color:#555"></div></div>
+            <div class="symbol-opt" data-sym="x" onclick="selectSymbol('x')"><div class="shape-x" style="color:#555"></div></div>
+            <div class="symbol-opt" data-sym="square" onclick="selectSymbol('square')"><div class="shape-square" style="color:#555"></div></div>
+            <div class="symbol-opt" data-sym="triangle" onclick="selectSymbol('triangle')"><div class="shape-triangle" style="color:#555"></div></div>
+        </div>
+
+        <div id="color-choice-area">
+            <p>Escolha sua cor:</p>
+            <button id="btn-black" onclick="selectColor('black')">Preto (41 peças)</button>
+            <button id="btn-white" onclick="selectColor('white')">Branco (40 peças)</button>
+        </div>
+        
+        <p id="selection-summary" style="color:#f1c40f; min-height: 20px;"></p>
+        <button id="btn-next-step" onclick="handleSetupFlow()">Próximo</button>
+    </div>
+
+    <div id="game-container" class="hidden">
+        <div id="status-panel">
+            <div>Vez de: <span id="current-turn">-</span></div>
+            <div>Placar Vitórias: <span id="score">P1: 0 | P2: 0</span></div>
+            <div>Preto Restantes: <span id="rem-black">41</span></div>
+            <div>Branco Restantes: <span id="rem-white">40</span></div>
+            <div class="captured-info">
+                Presas - Pretas: <span id="cap-black">0</span> | Brancas: <span id="cap-white">0</span>
+            </div>
+        </div>
+        <div id="board"></div>
+        <button onclick="resetGame(false)">Reiniciar Tudo</button>
+        <button onclick="resetGame(true)">Próxima Rodada</button>
+        <button onclick="backToMenu()">Menu Principal</button>
+    </div>
+
+    <script>
+        let boardState = Array(81).fill(null);
+        let turn = "black";
+        let p1 = { symbol: '', color: '', pieces: 0, wins: 0, captured: 0 };
+        let p2 = { symbol: '', color: '', pieces: 0, wins: 0, captured: 0 };
+        let currentStep = 1; 
+        let tempSymbol = '';
+        let tempColor = '';
+
+        function backToMenu() {
+            document.querySelectorAll('body > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById('main-menu').classList.remove('hidden');
+            resetStates();
+        }
+
+        function resetStates() {
+            currentStep = 1; tempSymbol = ''; tempColor = '';
+            document.getElementById('setup-title').innerText = "Jogador 1";
+            document.getElementById('color-choice-area').classList.remove('hidden');
+            document.getElementById('selection-summary').innerText = "";
+        }
+
+        function showRules() { document.getElementById('rules-screen').classList.remove('hidden'); }
+
+        function setupPVP() {
+            backToMenu();
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('setup-player').classList.remove('hidden');
+            renderSymbolOptions();
+        }
+
+        function selectSymbol(s) {
+            tempSymbol = s;
+            renderSymbolOptions();
+        }
+
+        function selectColor(c) {
+            tempColor = c;
+            document.getElementById('selection-summary').innerText = `Cor: ${c === 'black' ? 'Preto' : 'Branco'}`;
+        }
+
+        function renderSymbolOptions() {
+            const opts = document.querySelectorAll('.symbol-opt');
+            opts.forEach(opt => {
+                opt.classList.toggle('selected', tempSymbol === opt.dataset.sym);
+            });
+        }
+
+        function handleSetupFlow() {
+            if (!tempSymbol) { alert("Escolha um formato!"); return; }
+            
+            if (currentStep === 1) {
+                if (!tempColor) { alert("Escolha uma cor!"); return; }
+                p1.symbol = tempSymbol;
+                p1.color = tempColor;
+                
+                currentStep = 2;
+                p2.color = p1.color === 'black' ? 'white' : 'black';
+                tempSymbol = '';
+                document.getElementById('setup-title').innerText = "Jogador 2";
+                document.getElementById('color-choice-area').classList.add('hidden');
+                document.getElementById('selection-summary').innerText = `Sua cor é ${p2.color === 'black' ? 'Preto' : 'Branco'}`;
+                renderSymbolOptions();
+            } else {
+                p2.symbol = tempSymbol;
+                startGame();
+            }
+        }
+
+        function startGame() {
+            p1.pieces = p1.color === 'black' ? 41 : 40;
+            p2.pieces = p2.color === 'black' ? 41 : 40;
+            p1.captured = 0; p2.captured = 0;
+            document.getElementById('setup-player').classList.add('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+            renderBoard();
+            updateStatus();
+        }
+
+        function getPieceHTML(symbol, color, isGhost = false) {
+            const ghostClass = isGhost ? 'ghost' : '';
+            return `<div class="piece ${color} ${ghostClass}"><div class="shape-${symbol}"></div></div>`;
+        }
+
+        function renderBoard() {
+            const boardEl = document.getElementById('board');
+            boardEl.innerHTML = '';
+            for (let i = 0; i < 81; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'intersection';
+                cell.onmouseover = () => {
+                    if (!boardState[i]) {
+                        document.querySelectorAll('.ghost').forEach(g => g.remove());
+                        const activeP = turn === p1.color ? p1 : p2;
+                        if(activeP.pieces > 0) cell.innerHTML += getPieceHTML(activeP.symbol, activeP.color, true);
+                    }
+                };
+                cell.onclick = () => placePiece(i);
+                if (boardState[i]) {
+                    cell.innerHTML = getPieceHTML(boardState[i].symbol, boardState[i].color);
+                }
+                boardEl.appendChild(cell);
+            }
+        }
+
+        function placePiece(index) {
+            if (boardState[index]) return;
+            const activeP = turn === p1.color ? p1 : p2;
+
+            if (activeP.pieces <= 0) return;
+
+            boardState[index] = { color: turn, symbol: activeP.symbol };
+            activeP.pieces--;
+            
+            // Simulação de captura aleatória para demonstração do contador (Pode ser substituído por lógica real de Go)
+            // if(Math.random() > 0.9) { activeP.captured++; }
+
+            turn = turn === 'black' ? 'white' : 'black';
+            renderBoard();
+            updateStatus();
+            checkGameOver();
+        }
+
+        function updateStatus() {
+            document.getElementById('current-turn').innerText = turn === 'black' ? "Preto" : "Branco";
+            document.getElementById('rem-black').innerText = p1.color === 'black' ? p1.pieces : p2.pieces;
+            document.getElementById('rem-white').innerText = p1.color === 'white' ? p1.pieces : p2.pieces;
+            document.getElementById('cap-black').innerText = p1.color === 'black' ? p1.captured : p2.captured;
+            document.getElementById('cap-white').innerText = p1.color === 'white' ? p1.captured : p2.captured;
+            document.getElementById('score').innerText = `P1: ${p1.wins} | P2: ${p2.wins}`;
+        }
+
+        function checkGameOver() {
+            const isFull = boardState.every(cell => cell !== null);
+            if (isFull) {
+                const countP1 = boardState.filter(s => s.color === p1.color).length;
+                const countP2 = boardState.filter(s => s.color === p2.color).length;
+                
+                let msg = "";
+                if (countP1 > countP2) { p1.wins++; msg = "Jogador 1 venceu!"; }
+                else if (countP2 > countP1) { p2.wins++; msg = "Jogador 2 venceu!"; }
+                else msg = "Empate!";
+
+                alert(`${msg}\nPeças no tabuleiro: P1 (${countP1}) - P2 (${countP2})\nPeças presas: P1 (${p1.captured}) - P2 (${p2.captured})`);
+                updateStatus();
+            }
+        }
+
+        function resetGame(keepScore) {
+            boardState = Array(81).fill(null);
+            p1.pieces = p1.color === 'black' ? 41 : 40;
+            p2.pieces = p2.color === 'black' ? 41 : 40;
+            p1.captured = 0; p2.captured = 0;
+            turn = "black";
+            if (!keepScore) { p1.wins = 0; p2.wins = 0; }
+            renderBoard();
+            updateStatus();
+        }
+
+        function setupIA() { alert("Modo IA: O Jogador 2 será simulado. Configure o Jogador 1."); setupPVP(); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+
+i = 5
+
+print("Exibição de Números")
+
+# enquanto i for menor que 200, este código deve ocorrer 
+while i <= 200:
+    print(i)
+    i = i + 1
+
+print("Fim")

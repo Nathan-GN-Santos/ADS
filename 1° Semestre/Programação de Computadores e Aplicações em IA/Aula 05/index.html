@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha vs IA</title>
+    <style>
+        /* =========================================
+           ESTILOS (CSS) - Design claro e responsivo
+           ========================================= */
+        :root {
+            --cor-fundo: #1a1a2e;
+            --cor-texto: #e94560;
+            --cor-borda: #0f3460;
+            --cor-x: #e94560;
+            --cor-o: #43e8d8;
+            --cor-botao-hover: #16213e;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        #mensagem-status {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            height: 30px; /* Mantém o espaço fixo para não pular a tela */
+        }
+
+        /* O tabuleiro usa CSS Grid para fazer a grade 3x3 perfeita */
+        .tabuleiro {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            background-color: var(--cor-borda);
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .celula {
+            background-color: var(--cor-fundo);
+            border: none;
+            border-radius: 5px;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .celula:hover {
+            background-color: var(--cor-botao-hover);
+        }
+
+        /* Classes para colorir X e O diferentemente */
+        .celula.x { color: var(--cor-x); }
+        .celula.o { color: var(--cor-o); }
+
+        .btn-reiniciar {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: var(--cor-texto);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-reiniciar:hover {
+            background-color: #d13d55;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =========================================
+         ESTRUTURA (HTML)
+         ========================================= -->
+    <h1>Jogo da Velha</h1>
+    <div id="mensagem-status">Sua vez! (Você é o X)</div>
+
+    <div class="tabuleiro" id="tabuleiro">
+        <!-- As 9 células do jogo -->
+        <button class="celula" data-indice="0"></button>
+        <button class="celula" data-indice="1"></button>
+        <button class="celula" data-indice="2"></button>
+        <button class="celula" data-indice="3"></button>
+        <button class="celula" data-indice="4"></button>
+        <button class="celula" data-indice="5"></button>
+        <button class="celula" data-indice="6"></button>
+        <button class="celula" data-indice="7"></button>
+        <button class="celula" data-indice="8"></button>
+    </div>
+
+    <button class="btn-reiniciar" onclick="reiniciarJogo()">Reiniciar Jogo</button>
+
+    <!-- =========================================
+         LÓGICA (JavaScript) - Evitando Spaghetti Code
+         ========================================= -->
+    <script>
+        // --- VARIÁVEIS DE ESTADO DO JOGO ---
+        let estadoTabuleiro = ["", "", "", "", "", "", "", "", ""];
+        let jogoAtivo = true;
+        const JOGADOR_HUMANO = "X";
+        const JOGADOR_IA = "O";
+
+        // Elementos da interface
+        const celulasDOM = document.querySelectorAll('.celula');
+        const mensagemStatusDOM = document.getElementById('mensagem-status');
+
+        // Todas as combinações que garantem uma vitória (linhas, colunas, diagonais)
+        const condicoesVitoria = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Linhas
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colunas
+            [0, 4, 8], [2, 4, 6]             // Diagonais
+        ];
+
+        // --- INICIALIZAÇÃO ---
+        // Adiciona o evento de clique a cada célula do tabuleiro
+        celulasDOM.forEach(celula => {
+            celula.addEventListener('click', () => lidarComCliqueHumano(celula));
+        });
+
+        // --- FUNÇÃO: Lidar com o clique do jogador ---
+        function lidarComCliqueHumano(celulaClicada) {
+            const indice = celulaClicada.getAttribute('data-indice');
+
+            // Se a célula já estiver preenchida ou o jogo acabou, não faz nada
+            if (estadoTabuleiro[indice] !== "" || !jogoAtivo) {
+                return;
+            }
+
+            // Registra a jogada do humano
+            registrarJogada(indice, JOGADOR_HUMANO);
+
+            // Verifica se o humano ganhou ou empatou antes de passar a vez
+            if (jogoAtivo) {
+                mensagemStatusDOM.innerText = "Computador pensando...";
+                // Pausa de 500ms para parecer que o computador está pensando
+                setTimeout(jogadaComputador, 500); 
+            }
+        }
+
+        // --- FUNÇÃO: Registrar a jogada no tabuleiro e na interface ---
+        function registrarJogada(indice, jogador) {
+            estadoTabuleiro[indice] = jogador;
+            celulasDOM[indice].innerText = jogador;
+            celulasDOM[indice].classList.add(jogador.toLowerCase()); // Adiciona classe 'x' ou 'o' para colorir
+            
+            verificarResultado(jogador);
+        }
+
+        // --- FUNÇÃO: Inteligência Artificial (Nível Médio) ---
+        function jogadaComputador() {
+            if (!jogoAtivo) return;
+
+            let indiceEscolhido = -1;
+
+            // ESTRATÉGIA 1: Atacar - Tentar ganhar se houver oportunidade
+            indiceEscolhido = encontrarMelhorJogada(JOGADOR_IA);
+
+            // ESTRATÉGIA 2: Defender - Bloquear o humano se ele for ganhar
+            if (indiceEscolhido === -1) {
+                indiceEscolhido = encontrarMelhorJogada(JOGADOR_HUMANO);
+            }
+
+            // ESTRATÉGIA 3: Aleatório - Se ninguém está ameaçando, escolhe um espaço vazio aleatório
+            if (indiceEscolhido === -1) {
+                let espacosVazios = [];
+                for (let i = 0; i < estadoTabuleiro.length; i++) {
+                    if (estadoTabuleiro[i] === "") {
+                        espacosVazios.push(i);
+                    }
+                }
+                
+                if (espacosVazios.length > 0) {
+                    const indiceAleatorio = Math.floor(Math.random() * espacosVazios.length);
+                    indiceEscolhido = espacosVazios[indiceAleatorio];
+                }
+            }
+
+            // Faz a jogada
+            if (indiceEscolhido !== -1) {
+                registrarJogada(indiceEscolhido, JOGADOR_IA);
+                if (jogoAtivo) {
+                    mensagemStatusDOM.innerText = "Sua vez! (Você é o X)";
+                }
+            }
+        }
+
+        // --- FUNÇÃO AUXILIAR DA IA: Procura onde falta apenas 1 peça para completar a linha ---
+        function encontrarMelhorJogada(jogadorParaVerificar) {
+            for (let i = 0; i < condicoesVitoria.length; i++) {
+                const [a, b, c] = condicoesVitoria[i];
+                
+                // Pega o valor atual do tabuleiro nessas posições
+                const valA = estadoTabuleiro[a];
+                const valB = estadoTabuleiro[b];
+                const valC = estadoTabuleiro[c];
+
+                // Checa se duas posições pertencem ao jogador e a terceira está vazia
+                if (valA === jogadorParaVerificar && valB === jogadorParaVerificar && valC === "") return c;
+                if (valA === jogadorParaVerificar && valC === jogadorParaVerificar && valB === "") return b;
+                if (valB === jogadorParaVerificar && valC === jogadorParaVerificar && valA === "") return a;
+            }
+            return -1; // Retorna -1 se não encontrar nenhuma jogada de perigo/vitória
+        }
+
+        // --- FUNÇÃO: Verificar Vitória, Derrota ou Empate ---
+        function verificarResultado(jogadorAtual) {
+            let houveVencedor = false;
+
+            // Percorre as combinações para ver se alguém completou a linha
+            for (let i = 0; i < condicoesVitoria.length; i++) {
+                const [a, b, c] = condicoesVitoria[i];
+                if (estadoTabuleiro[a] === "" || estadoTabuleiro[b] === "" || estadoTabuleiro[c] === "") {
+                    continue;
+                }
+                if (estadoTabuleiro[a] === estadoTabuleiro[b] && estadoTabuleiro[b] === estadoTabuleiro[c]) {
+                    houveVencedor = true;
+                    break;
+                }
+            }
+
+            if (houveVencedor) {
+                if (jogadorAtual === JOGADOR_HUMANO) {
+                    mensagemStatusDOM.innerText = "🏆 VOCÊ VENCEU!";
+                    mensagemStatusDOM.style.color = "var(--cor-x)";
+                } else {
+                    mensagemStatusDOM.innerText = "💻 COMPUTADOR VENCEU!";
+                    mensagemStatusDOM.style.color = "var(--cor-o)";
+                }
+                jogoAtivo = false;
+                return;
+            }
+
+            // Verifica se deu empate (velha) - Se não há mais espaços vazios
+            const temEspacoVazio = estadoTabuleiro.includes("");
+            if (!temEspacoVazio) {
+                mensagemStatusDOM.innerText = "🤝 DEU VELHA (Empate)!";
+                mensagemStatusDOM.style.color = "#fff";
+                jogoAtivo = false;
+            }
+        }
+
+        // --- FUNÇÃO: Reiniciar o Jogo (Sem recarregar a página) ---
+        function reiniciarJogo() {
+            // Zera as variáveis de lógica
+            estadoTabuleiro = ["", "", "", "", "", "", "", "", ""];
+            jogoAtivo = true;
+            mensagemStatusDOM.innerText = "Sua vez! (Você é o X)";
+            mensagemStatusDOM.style.color = "#fff";
+
+            // Limpa a interface (remove os textos e as classes de cor)
+            celulasDOM.forEach(celula => {
+                celula.innerText = "";
+                celula.classList.remove('x', 'o');
+            });
+        }
+    </script>
+</body>
+</html>

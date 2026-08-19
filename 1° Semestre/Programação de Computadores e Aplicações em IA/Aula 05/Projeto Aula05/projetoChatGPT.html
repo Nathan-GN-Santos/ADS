@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Go (围棋)</title>
+<style>
+body { font-family: Arial; text-align: center; background:#f5f5f5; }
+.hidden { display:none; }
+.board { display:grid; grid-template-columns: repeat(9,40px); gap:2px; justify-content:center; margin:20px; }
+.cell { width:40px; height:40px; background:#deb887; border:1px solid #333; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.black { background:black; }
+.white { background:white; }
+button { margin:5px; padding:10px; }
+</style>
+</head>
+<body>
+
+<div id="menu">
+<h1>Go (围棋)</h1>
+<p>Nathan e Éricles</p>
+<button onclick="showRules()">Regras</button>
+<button onclick="startPVP()">Jogador vs Jogador</button>
+<button onclick="startAI()">Jogador vs IA</button>
+</div>
+
+<div id="rules" class="hidden">
+<h2>Regras</h2>
+<p>As regras seguem o Go tradicional: capturar territórios cercando peças inimigas.</p>
+<button onclick="backMenu()">Voltar</button>
+</div>
+
+<div id="game" class="hidden">
+<h2 id="turn"></h2>
+<p id="pieces"></p>
+<div id="board" class="board"></div>
+<button onclick="restart(false)">Reiniciar</button>
+<button onclick="restart(true)">Resetar Placar</button>
+<button onclick="showRules()">Regras</button>
+<button onclick="backMenu()">Menu</button>
+</div>
+
+<script>
+let board = [];
+let current = 'black';
+let pieces = { black:41, white:40 };
+let score = { black:0, white:0 };
+
+function initBoard(){
+ board=[];
+ for(let i=0;i<81;i++) board.push(null);
+ render();
+}
+
+function render(){
+ const b = document.getElementById('board');
+ b.innerHTML='';
+ board.forEach((cell,i)=>{
+  const d=document.createElement('div');
+  d.className='cell '+(cell?cell:'');
+  d.onclick=()=>play(i);
+  b.appendChild(d);
+ });
+ document.getElementById('turn').innerText='Vez: '+current;
+ document.getElementById('pieces').innerText=`Pretas:${pieces.black} | Brancas:${pieces.white}`;
+}
+
+function play(i){
+ if(board[i] || pieces[current]<=0) return;
+ board[i]=current;
+ pieces[current]--;
+ current = current==='black'?'white':'black';
+ render();
+}
+
+function restart(resetScore){
+ if(resetScore) score={black:0,white:0};
+ pieces={black:41,white:40};
+ current='black';
+ initBoard();
+}
+
+function showRules(){
+ document.getElementById('menu').classList.add('hidden');
+ document.getElementById('game').classList.add('hidden');
+ document.getElementById('rules').classList.remove('hidden');
+}
+
+function backMenu(){
+ document.getElementById('rules').classList.add('hidden');
+ document.getElementById('game').classList.add('hidden');
+ document.getElementById('menu').classList.remove('hidden');
+}
+
+function startPVP(){
+ document.getElementById('menu').classList.add('hidden');
+ document.getElementById('game').classList.remove('hidden');
+ restart(false);
+}
+
+function startAI(){
+ alert('IA ainda simplificada');
+ startPVP();
+}
+
+</script>
+
+</body>
+</html>

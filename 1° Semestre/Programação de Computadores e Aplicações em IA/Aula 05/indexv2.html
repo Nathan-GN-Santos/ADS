@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha Simples</title>
+    <style>
+        /* =========================================
+           ESTILOS (CSS) - Design claro e responsivo
+           ========================================= */
+        :root {
+            --cor-fundo: #1a1a2e;
+            --cor-painel: #16213e;
+            --cor-borda: #0f3460;
+            --cor-texto: #ffffff;
+            --cor-destaque: #e94560;
+            
+            /* Cores dos símbolos */
+            --cor-x: #e94560;      /* Vermelho/Rosa */
+            --cor-o: #43e8d8;      /* Ciano */
+            --cor-tri: #f9ca24;    /* Amarelo */
+            --cor-quad: #6ab04c;   /* Verde */
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 5px; color: var(--cor-texto); }
+        h3 { margin-top: 0; color: #a0a0a0; font-weight: normal; margin-bottom: 30px;}
+
+        /* Classe utilitária para esconder telas e elementos */
+        .oculto { display: none !important; }
+
+        /* --- Estilos do Menu e Telas --- */
+        .tela {
+            background-color: var(--cor-painel);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .botoes-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            background-color: var(--cor-destaque);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            font-weight: bold;
+        }
+
+        button:hover { background-color: #d13d55; }
+        button:active { transform: scale(0.98); }
+        
+        .btn-secundario { background-color: var(--cor-borda); }
+        .btn-secundario:hover { background-color: #1a4f8f; }
+
+        /* --- Estilos da Seleção de Símbolos --- */
+        .grid-simbolos {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .btn-simbolo {
+            font-size: 2.5rem;
+            width: 70px;
+            height: 70px;
+            background-color: var(--cor-fundo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Estilos do Jogo --- */
+        #placar {
+            display: flex;
+            justify-content: space-around;
+            background-color: var(--cor-borda);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        #mensagem-status {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            min-height: 35px;
+        }
+
+        .tabuleiro {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            background-color: var(--cor-borda);
+            padding: 5px;
+            border-radius: 10px;
+            margin: 0 auto 20px auto;
+            width: max-content;
+        }
+
+        .celula {
+            background-color: var(--cor-fundo);
+            border: none;
+            border-radius: 5px;
+            font-size: 3.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .celula:hover { background-color: #1a2a4f; }
+
+        /* Cores específicas para cada símbolo */
+        .simbolo-X { color: var(--cor-x); }
+        .simbolo-O { color: var(--cor-o); }
+        .simbolo-▲ { color: var(--cor-tri); }
+        .simbolo-■ { color: var(--cor-quad); }
+
+        .controles-jogo {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Jogo da Velha Simples</h1>
+    <h3>Criado por Nathan e Éricles</h3>
+
+    <!-- =========================================
+         TELA 1: MENU PRINCIPAL
+         ========================================= -->
+    <div id="tela-menu" class="tela">
+        <h2>Escolha o Modo de Jogo</h2>
+        <div class="botoes-menu">
+            <button onclick="iniciarConfiguracao('multiplayer')">👥 Jogador vs Jogador</button>
+            <button onclick="iniciarConfiguracao('ia')">🤖 Jogador vs IA</button>
+        </div>
+    </div>
+
+    <!-- =========================================
+         TELA 2: SELEÇÃO DE SÍMBOLOS
+         ========================================= -->
+    <div id="tela-selecao" class="tela oculto">
+        <h2 id="titulo-selecao">Jogador 1, escolha seu símbolo</h2>
+        <div class="grid-simbolos" id="container-simbolos">
+            <!-- Botões gerados via JavaScript -->
+        </div>
+        <button class="btn-secundario" onclick="voltarAoMenu()">Voltar ao Menu</button>
+    </div>
+
+    <!-- =========================================
+         TELA 3: TABULEIRO DO JOGO
+         ========================================= -->
+    <div id="tela-jogo" class="tela oculto">
+        <div id="placar">
+            <span id="txt-placar-p1">P1 (X): 0</span>
+            <span id="txt-placar-p2">P2 (O): 0</span>
+        </div>
+
+        <div id="mensagem-status">Vez do Jogador 1</div>
+
+        <div class="tabuleiro" id="tabuleiro">
+            <!-- As 9 células do jogo -->
+            <button class="celula" data-indice="0"></button>
+            <button class="celula" data-indice="1"></button>
+            <button class="celula" data-indice="2"></button>
+            <button class="celula" data-indice="3"></button>
+            <button class="celula" data-indice="4"></button>
+            <button class="celula" data-indice="5"></button>
+            <button class="celula" data-indice="6"></button>
+            <button class="celula" data-indice="7"></button>
+            <button class="celula" data-indice="8"></button>
+        </div>
+
+        <div class="controles-jogo">
+            <button id="btn-acao-rodada" class="oculto" onclick="prepararNovaRodada()">Próxima Rodada</button>
+            <button onclick="reiniciarPartidaInteira()">Zerar Placar</button>
+            <button class="btn-secundario" onclick="voltarAoMenu()">Sair para o Menu</button>
+        </div>
+    </div>
+
+    <!-- =========================================
+         LÓGICA DO JOGO (JavaScript)
+         ========================================= -->
+    <script>
+        // --- CONSTANTES E DADOS BASE ---
+        const TODOS_SIMBOLOS = ['X', 'O', '▲', '■'];
+        const condicoesVitoria = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Linhas
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colunas
+            [0, 4, 8], [2, 4, 6]             // Diagonais
+        ];
+
+        // --- VARIÁVEIS DE ESTADO DO JOGO ---
+        let modoAtual = ''; // 'multiplayer' ou 'ia'
+        let simboloP1 = '';
+        let simboloP2 = '';
+        let pontosP1 = 0;
+        let pontosP2 = 0;
+        let turnoAtual = 1; // 1 para P1, 2 para P2/IA
+        let estadoTabuleiro = ["", "", "", "", "", "", "", "", ""];
+        let rodadaAtiva = false;
+        let partidaFinalizada = false; // Fica true quando alguém ganha 2 vezes
+
+        // --- ELEMENTOS DA INTERFACE ---
+        const telaMenu = document.getElementById('tela-menu');
+        const telaSelecao = document.getElementById('tela-selecao');
+        const telaJogo = document.getElementById('tela-jogo');
+        const tituloSelecao = document.getElementById('titulo-selecao');
+        const containerSimbolos = document.getElementById('container-simbolos');
+        const txtPlacarP1 = document.getElementById('txt-placar-p1');
+        const txtPlacarP2 = document.getElementById('txt-placar-p2');
+        const mensagemStatus = document.getElementById('mensagem-status');
+        const celulas = document.querySelectorAll('.celula');
+        const btnAcaoRodada = document.getElementById('btn-acao-rodada');
+
+        // --- INICIALIZAÇÃO DOS CLIQUES NO TABULEIRO ---
+        celulas.forEach(celula => {
+            celula.addEventListener('click', () => lidarComCliqueTabuleiro(celula));
+        });
+
+        // ==========================================
+        // FLUXO DE TELAS E CONFIGURAÇÃO
+        // ==========================================
+
+        function mostrarTela(tela) {
+            telaMenu.classList.add('oculto');
+            telaSelecao.classList.add('oculto');
+            telaJogo.classList.add('oculto');
+            tela.classList.remove('oculto');
+        }
+
+        function voltarAoMenu() {
+            mostrarTela(telaMenu);
+        }
+
+        // Inicia o processo de escolha de símbolos
+        function iniciarConfiguracao(modo) {
+            modoAtual = modo;
+            simboloP1 = '';
+            simboloP2 = '';
+            tituloSelecao.innerText = "Jogador 1, escolha seu símbolo";
+            renderizarBotoesSelecao(TODOS_SIMBOLOS, 1);
+            mostrarTela(telaSelecao);
+        }
+
+        // Renderiza os botões de X, O, Triângulo, Quadrado dinamicamente
+        function renderizarBotoesSelecao(simbolosDisponiveis, jogadorQueEstaEscolhendo) {
+            containerSimbolos.innerHTML = ''; // Limpa os anteriores
+            
+            simbolosDisponiveis.forEach(simbolo => {
+                const btn = document.createElement('button');
+                btn.className = `btn-simbolo simbolo-${simbolo}`;
+                btn.innerText = simbolo;
+                btn.onclick = () => selecionarSimbolo(simbolo, jogadorQueEstaEscolhendo);
+                containerSimbolos.appendChild(btn);
+            });
+        }
+
+        function selecionarSimbolo(simbolo, jogador) {
+            if (jogador === 1) {
+                simboloP1 = simbolo;
+                const simbolosRestantes = TODOS_SIMBOLOS.filter(s => s !== simbolo);
+
+                if (modoAtual === 'multiplayer') {
+                    // P2 precisa escolher agora
+                    tituloSelecao.innerText = "Jogador 2, escolha seu símbolo";
+                    renderizarBotoesSelecao(simbolosRestantes, 2);
+                } else if (modoAtual === 'ia') {
+                    // IA escolhe aleatoriamente do que sobrou
+                    const indiceAleatorio = Math.floor(Math.random() * simbolosRestantes.length);
+                    simboloP2 = simbolosRestantes[indiceAleatorio];
+                    iniciarPartida(); // IA já escolheu, vai pro jogo
+                }
+            } else if (jogador === 2) {
+                simboloP2 = simbolo;
+                iniciarPartida(); // P2 escolheu, vai pro jogo
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DO JOGO (PARTIDAS E RODADAS)
+        // ==========================================
+
+        function iniciarPartida() {
+            // Zera o placar geral da melhor de 3
+            pontosP1 = 0;
+            pontosP2 = 0;
+            partidaFinalizada = false;
+            atualizarPlacar();
+            prepararNovaRodada();
+            mostrarTela(telaJogo);
+        }
+
+        function reiniciarPartidaInteira() {
+            iniciarPartida();
+        }
+
+        function prepararNovaRodada() {
+            // Zera o tabuleiro
+            estadoTabuleiro = ["", "", "", "", "", "", "", "", ""];
+            rodadaAtiva = true;
+            btnAcaoRodada.classList.add('oculto'); // Esconde botão de próxima rodada
+            
+            // Limpa as células visualmente
+            celulas.forEach(celula => {
+                celula.innerText = "";
+                celula.className = "celula"; // Reseta as classes de cor
+            });
+
+            // O perdedor da última rodada começa, ou P1 por padrão
+            // Para simplificar: P1 sempre começa a nova rodada
+            turnoAtual = 1; 
+            atualizarMensagemTurno();
+
+            // Se for IA e ela for a primeira a jogar (se implementarmos alternância depois)
+            // No momento, P1 sempre começa, então isso não é estritamente necessário aqui, 
+            // mas garante segurança futura.
+        }
+
+        function atualizarPlacar() {
+            let nomeP2 = modoAtual === 'ia' ? 'IA' : 'P2';
+            txtPlacarP1.innerText = `P1 (${simboloP1}): ${pontosP1}`;
+            txtPlacarP2.innerText = `${nomeP2} (${simboloP2}): ${pontosP2}`;
+        }
+
+        function atualizarMensagemTurno() {
+            if (!rodadaAtiva) return;
+
+            if (turnoAtual === 1) {
+                mensagemStatus.innerText = `Vez do Jogador 1 (${simboloP1})`;
+                mensagemStatus.style.color = getComputedStyle(document.body).getPropertyValue(`--cor-${obterNomeCor(simboloP1)}`);
+            } else {
+                let nome = modoAtual === 'ia' ? 'Computador' : 'Jogador 2';
+                mensagemStatus.innerText = `Vez do ${nome} (${simboloP2})`;
+                mensagemStatus.style.color = getComputedStyle(document.body).getPropertyValue(`--cor-${obterNomeCor(simboloP2)}`);
+            }
+        }
+
+        // Ajuda a pegar a variável CSS de cor correta baseada no símbolo
+        function obterNomeCor(simbolo) {
+            if(simbolo === 'X') return 'x';
+            if(simbolo === 'O') return 'o';
+            if(simbolo === '▲') return 'tri';
+            if(simbolo === '■') return 'quad';
+            return 'texto';
+        }
+
+        function lidarComCliqueTabuleiro(celula) {
+            const indice = celula.getAttribute('data-indice');
+
+            // Ignora o clique se o espaço já tá ocupado, a rodada acabou, 
+            // ou se for a vez da IA (impede o humano de clicar duas vezes rápido)
+            if (estadoTabuleiro[indice] !== "" || !rodadaAtiva) return;
+            if (modoAtual === 'ia' && turnoAtual === 2) return;
+
+            // Executa a jogada do humano
+            executarJogada(indice, turnoAtual === 1 ? simboloP1 : simboloP2);
+
+            // Se a rodada continua e é vs IA, a IA joga agora
+            if (rodadaAtiva && modoAtual === 'ia' && turnoAtual === 2) {
+                mensagemStatus.innerText = "Computador pensando...";
+                mensagemStatus.style.color = "#fff";
+                setTimeout(jogadaIA, 600); // Dá um tempinho pra parecer realista
+            }
+        }
+
+        function executarJogada(indice, simbolo) {
+            // Atualiza array interno
+            estadoTabuleiro[indice] = simbolo;
+            
+            // Atualiza a tela
+            celulas[indice].innerText = simbolo;
+            celulas[indice].classList.add(`simbolo-${simbolo}`);
+
+            // Verifica se a jogada resultou em vitória ou empate
+            verificarResultado(simbolo);
+
+            // Se a rodada não acabou, passa a vez
+            if (rodadaAtiva) {
+                turnoAtual = turnoAtual === 1 ? 2 : 1;
+                atualizarMensagemTurno();
+            }
+        }
+
+        // ==========================================
+        // INTELIGÊNCIA ARTIFICIAL (IA)
+        // ==========================================
+
+        function jogadaIA() {
+            if (!rodadaAtiva) return;
+
+            let indiceEscolhido = -1;
+
+            // ESTRATÉGIA 1: Atacar - Tentar ganhar se faltar só 1
+            indiceEscolhido = procurarJogadaVencedora(simboloP2);
+
+            // ESTRATÉGIA 2: Defender - Se P1 for ganhar, bloqueia
+            if (indiceEscolhido === -1) {
+                indiceEscolhido = procurarJogadaVencedora(simboloP1);
+            }
+
+            // ESTRATÉGIA 3: Aleatório - Se ninguém tá quase ganhando, pega um vazio
+            if (indiceEscolhido === -1) {
+                let vazios = estadoTabuleiro.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
+                if (vazios.length > 0) {
+                    indiceEscolhido = vazios[Math.floor(Math.random() * vazios.length)];
+                }
+            }
+
+            if (indiceEscolhido !== -1) {
+                executarJogada(indiceEscolhido, simboloP2);
+            }
+        }
+
+        // Função auxiliar da IA para achar qual espaço falta pra completar linha
+        function procurarJogadaVencedora(simboloAlvo) {
+            for (let combo of condicoesVitoria) {
+                const [a, b, c] = combo;
+                const vA = estadoTabuleiro[a], vB = estadoTabuleiro[b], vC = estadoTabuleiro[c];
+
+                if (vA === simboloAlvo && vB === simboloAlvo && vC === "") return c;
+                if (vA === simboloAlvo && vC === simboloAlvo && vB === "") return b;
+                if (vB === simboloAlvo && vC === simboloAlvo && vA === "") return a;
+            }
+            return -1;
+        }
+
+        // ==========================================
+        // VERIFICAÇÃO DE FIM DE JOGO
+        // ==========================================
+
+        function verificarResultado(simboloJogado) {
+            let houveVencedor = false;
+
+            // Checa as combinações vitoriosas
+            for (let combo of condicoesVitoria) {
+                const [a, b, c] = combo;
+                if (estadoTabuleiro[a] !== "" && 
+                    estadoTabuleiro[a] === estadoTabuleiro[b] && 
+                    estadoTabuleiro[b] === estadoTabuleiro[c]) {
+                    houveVencedor = true;
+                    break;
+                }
+            }
+
+            if (houveVencedor) {
+                rodadaAtiva = false;
+                
+                // Pontua e gera a mensagem de quem ganhou
+                if (simboloJogado === simboloP1) {
+                    pontosP1++;
+                    mensagemStatus.innerText = `🏆 P1 Ganhou a Rodada!`;
+                    mensagemStatus.style.color = getComputedStyle(document.body).getPropertyValue(`--cor-${obterNomeCor(simboloP1)}`);
+                } else {
+                    pontosP2++;
+                    let nome = modoAtual === 'ia' ? 'Computador' : 'P2';
+                    mensagemStatus.innerText = `🏆 ${nome} Ganhou a Rodada!`;
+                    mensagemStatus.style.color = getComputedStyle(document.body).getPropertyValue(`--cor-${obterNomeCor(simboloP2)}`);
+                }
+
+                atualizarPlacar();
+                verificarFimDaMelhorDe3();
+                return;
+            }
+
+            // Checa Empate (Velha)
+            if (!estadoTabuleiro.includes("")) {
+                rodadaAtiva = false;
+                mensagemStatus.innerText = "🤝 Deu Velha! Empate na Rodada.";
+                mensagemStatus.style.color = "#fff";
+                mostrarBotaoProximaRodada();
+            }
+        }
+
+        function verificarFimDaMelhorDe3() {
+            // Verifica quem chegou a 2 pontos primeiro
+            if (pontosP1 >= 2) {
+                mensagemStatus.innerText = "👑 JOGADOR 1 VENCEU A PARTIDA! 👑";
+                mensagemStatus.style.color = "#fff";
+                finalizarMelhorDe3();
+            } else if (pontosP2 >= 2) {
+                let nome = modoAtual === 'ia' ? 'COMPUTADOR' : 'JOGADOR 2';
+                mensagemStatus.innerText = `👑 ${nome} VENCEU A PARTIDA! 👑`;
+                mensagemStatus.style.color = "#fff";
+                finalizarMelhorDe3();
+            } else {
+                // Se ninguém chegou a 2, apenas mostra o botão de próxima rodada
+                mostrarBotaoProximaRodada();
+            }
+        }
+
+        function mostrarBotaoProximaRodada() {
+            btnAcaoRodada.innerText = "Próxima Rodada";
+            btnAcaoRodada.classList.remove('oculto');
+        }
+
+        function finalizarMelhorDe3() {
+            partidaFinalizada = true;
+            btnAcaoRodada.innerText = "Jogar Novamente";
+            btnAcaoRodada.classList.remove('oculto');
+            
+            // O botão altera seu comportamento pra reiniciar tudo quando alguém ganha 2 vezes
+            btnAcaoRodada.onclick = iniciarPartida; 
+        }
+
+        // Restaura o comportamento padrão do botão para as rodadas intermediárias
+        btnAcaoRodada.onclick = prepararNovaRodada;
+
+    </script>
+</body>
+</html>

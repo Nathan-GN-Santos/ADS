@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Go (Wéiqí) - 9x9</title>
+    <style>
+        * {
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2a5f3a 0%, #1d3e28 100%);
+            font-family: 'Segoe UI', 'Noto Sans', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Container principal */
+        .game-container {
+            background: #deb887;
+            border-radius: 48px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+            padding: 20px 25px 25px 25px;
+        }
+
+        /* Menu e telas */
+        .screen {
+            background: #f7e9d0;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: inset 0 0 0 2px #fff8, 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .menu-screen, .game-screen {
+            transition: all 0.2s;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 5px 0;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #2c2b28;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #5a3e1b;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .authors {
+            text-align: center;
+            font-size: 1rem;
+            background: #e9dccd;
+            display: inline-block;
+            width: 100%;
+            padding: 8px;
+            border-radius: 60px;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #2c2b28;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 12px 28px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 4px 0 #111;
+            font-family: inherit;
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #111;
+        }
+
+        .choice-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            font-size: 2rem;
+            width: 70px;
+            background: #5a3e1b;
+            box-shadow: 0 4px 0 #2c1d0a;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            background: #e5bc7c;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: inset 0 0 0 2px #f3e2b0, 0 8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+
+        .cell {
+            aspect-ratio: 1 / 1;
+            background: #e5bc7c;
+            border: 1px solid #ac8e54;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.05s linear;
+            position: relative;
+        }
+
+        /* Marcador de última jogada */
+        .cell.last-move::after {
+            content: "•";
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 1rem;
+            color: gold;
+            text-shadow: 0 0 2px black;
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .score-box, .turn-box, .stones-left {
+            background: #2c2b28;
+            color: #f7e9d0;
+            padding: 8px 15px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .inline-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .small-btn {
+            font-size: 0.8rem;
+            padding: 6px 15px;
+        }
+
+        .hover-marker {
+            pointer-events: none;
+            position: absolute;
+            background: rgba(255,255,200,0.5);
+            border-radius: 50%;
+            width: 70%;
+            height: 70%;
+            top: 15%;
+            left: 15%;
+        }
+
+        .status {
+            text-align: center;
+            font-weight: bold;
+            margin: 8px 0;
+            background: #f0e0c0;
+            padding: 6px;
+            border-radius: 28px;
+        }
+
+        @media (max-width: 600px) {
+            .cell { font-size: 1rem; }
+            .choice-btn { width: 55px; font-size: 1.5rem; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+    // ------------------- LÓGICA DO GO (Wéiqí) 9x9 -------------------
+    // Regras implementadas: 
+    // - Liberdades (adjacência ortogonal, grupos)
+    // - Captura
+    // - Ko (impedir repetição de tabuleiro)
+    // - Superko simples (não permitir estado anterior)
+    // - Passes e contagem final (território + capturas)
+    // - Peças restantes: Pretas 41, Brancas 40
+
+    const BOARD_SIZE = 9;
+    const TOTAL_CELLS = 81;
+    const BLACK_STONES = 41;
+    const WHITE_STONES = 40;
+
+    // Estados do jogo
+    let board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(null)); // 'black' ou 'white'
+    let currentPlayer = 'black'; // black começa
+    let gameActive = true;
+    let gameMode = null; // 'pvp' ou 'pvc'
+    let aiDifficulty = null; // 'easy', 'medium', 'hard'
+    
+    // Placar (vitórias)
+    let scoreBlack = 0;
+    let scoreWhite = 0;
+    
+    // Peças restantes
+    let remainingBlack = BLACK_STONES;
+    let remainingWhite = WHITE_STONES;
+    
+    // Controle de passes consecutivos para fim de jogo
+    let passCount = 0;
+    
+    // Histórico de estados (para superko)
+    let previousStates = new Set(); // hash de tabuleiros
+    
+    // Armazenar última jogada (para visual)
+    let lastMovePos = null;
+    
+    // Personalização dos símbolos
+    let playerSymbols = { black: '⚫', white: '⚪' }; // padrão, mas será substituído
+    let p1Symbol = '●'; // padrão
+    let p2Symbol = '○';
+    
+    // Configuração dos jogadores (PVP)
+    let p1Color = null;
+    let p2Color = null;
+    let p1SymbolChoice = null;
+    let p2SymbolChoice = null;
+    
+    // Para IA: cor do humano, dificuldade
+    let humanColor = null;
+    
+    // Referências DOM
+    let app = document.getElementById('app');
+    
+    // Função de hash do tabuleiro
+    function getBoardHash() {
+        let h = '';
+        for(let i=0;i<BOARD_SIZE;i++) {
+            for(let j=0;j<BOARD_SIZE;j++) {
+                let val = board[i][j];
+                if(val === 'black') h += 'B';
+                else if(val === 'white') h += 'W';
+                else h += '.';
+            }
+        }
+        return h;
+    }
+    
+    // Salvar estado no histórico
+    function pushState() {
+        let hash = getBoardHash();
+        previousStates.add(hash);
+    }
+    
+    // Verificar se estado já ocorreu (superko)
+    function isRepeatingState() {
+        let hash = getBoardHash();
+        return previousStates.has(hash);
+    }
+    
+    // Obter vizinhos ortogonais válidos
+    function getNeighbors(row, col) {
+        let neigh = [];
+        if(row > 0) neigh.push([row-1, col]);
+        if(row < BOARD_SIZE-1) neigh.push([row+1, col]);
+        if(col > 0) neigh.push([row, col-1]);
+        if(col < BOARD_SIZE-1) neigh.push([row, col+1]);
+        return neigh;
+    }
+    
+    // Obter grupo inteiro de mesma cor via BFS
+    function getGroup(row, col, visited=null) {
+        let color = board[row][col];
+        if(!color) return [];
+        let group = [];
+        let queue = [[row, col]];
+        let localVisited = visited ? visited : new Set();
+        let key = (r,c) => `${r},${c}`;
+        if(!visited) localVisited.add(key(row,col));
+        while(queue.length) {
+            let [r,c] = queue.shift();
+            group.push([r,c]);
+            let neighbors = getNeighbors(r,c);
+            for(let [nr,nc] of neighbors) {
+                if(board[nr][nc] === color && !localVisited.has(key(nr,nc))) {
+                    localVisited.add(key(nr,nc));
+                    queue.push([nr,nc]);
+                }
+            }
+        }
+        return group;
+    }
+    
+    // Calcular liberdades de um grupo
+    function getLiberties(group) {
+        let liberties = new Set();
+        for(let [r,c] of group) {
+            let neigh = getNeighbors(r,c);
+            for(let [nr,nc] of neigh) {
+                if(board[nr][nc] === null) liberties.add(`${nr},${nc}`);
+            }
+        }
+        return liberties.size;
+    }
+    
+    // Após jogada, remover grupos adversários sem liberdades, retorna quantas capturas
+    function captureDeadGroups(color) {
+        let opponent = color === 'black' ? 'white' : 'black';
+        let captured = 0;
+        // Encontrar grupos adversários que podem ter 0 liberdades
+        let toRemove = [];
+        for(let i=0;i<BOARD_SIZE;i++) {
+            for(let j=0;j<BOARD_SIZE;j++) {
+                if(board[i][j] === opponent) {
+                    let group = getGroup(i,j);
+                    if(getLiberties(group) === 0) {
+                        toRemove.push(...group);
+                    }
+                }
+            }
+        }
+        for(let [r,c] of toRemove) {
+            board[r][c] = null;
+            captured++;
+        }
+        return captured;
+    }
+    
+    // Verificar se uma jogada é legal (incluindo regra de Ko e superko)
+    function isLegalMove(row, col, color) {
+        if(!gameActive) return false;
+        if(board[row][col] !== null) return false;
+        // Simular jogada
+        let simulatedBoard = copyBoard();
+        simulatedBoard[row][col] = color;
+        // Verificar capturas do oponente
+        let opponent = color === 'black' ? 'white' : 'black';
+        let willCapture = false;
+        let neighbors = getNeighbors(row,col);
+        for(let [nr,nc] of neighbors) {
+            if(simulatedBoard[nr][nc] === opponent) {
+                let group = getGroupOnBoard(nr,nc, simulatedBoard);
+                if(getLibertiesOnBoard(group, simulatedBoard) === 0) willCapture = true;
+            }
+        }
+        // Verificar se o grupo da pedra colocada tem liberdade
+        let myGroup = getGroupOnBoard(row,col, simulatedBoard);
+        let myLibs = getLibertiesOnBoard(myGroup, simulatedBoard);
+        if(myLibs === 0 && !willCapture) return false; // suicídio
+        
+        // Verificar Ko: se após captura o tabuleiro ficar igual a um estado anterior (excluindo a jogada atual)
+        // Faremos um teste: aplicar capturas no simulado
+        let captureHappened = false;
+        for(let [nr,nc] of neighbors) {
+            if(simulatedBoard[nr][nc] === opponent) {
+                let group = getGroupOnBoard(nr,nc, simulatedBoard);
+                if(getLibertiesOnBoard(group, simulatedBoard) === 0) {
+                    for(let [gr,gc] of group) simulatedBoard[gr][gc] = null;
+                    captureHappened = true;
+                }
+            }
+        }
+        // Reavaliar liberdade do grupo original após captura
+        let finalMyGroup = getGroupOnBoard(row,col, simulatedBoard);
+        if(getLibertiesOnBoard(finalMyGroup, simulatedBoard) === 0) return false;
+        
+        // Verificar superko comparando com estados anteriores
+        let hash = getBoardHashFrom(simulatedBoard);
+        if(previousStates.has(hash)) return false;
+        
+        return true;
+    }
+    
+    // Funções auxiliares para simulação
+    function copyBoard() {
+        return board.map(row => [...row]);
+    }
+    function getGroupOnBoard(r,c, b) {
+        let color = b[r][c];
+        if(!color) return [];
+        let group = [];
+        let queue = [[r,c]];
+        let visited = new Set();
+        let key = (rr,cc) => `${rr},${cc}`;
+        visited.add(key(r,c));
+        while(queue.length) {
+            let [cr,cc] = queue.shift();
+            group.push([cr,cc]);
+            let neigh = getNeighbors(cr,cc);
+            for(let [nr,nc] of neigh) {
+                if(b[nr][nc] === color && !visited.has(key(nr,nc))) {
+                    visited.add(key(nr,nc));
+                    queue.push([nr,nc]);
+                }
+            }
+        }
+        return group;
+    }
+    function getLibertiesOnBoard(group, b) {
+        let libs = new Set();
+        for(let [r,c] of group) {
+            let neigh = getNeighbors(r,c);
+            for(let [nr,nc] of neigh) {
+                if(b[nr][nc] === null) libs.add(`${nr},${nc}`);
+            }
+        }
+        return libs.size;
+    }
+    function getBoardHashFrom(b) {
+        let h = '';
+        for(let i=0;i<BOARD_SIZE;i++) {
+            for(let j=0;j<BOARD_SIZE;j++) {
+                let val = b[i][j];
+                if(val === 'black') h += 'B';
+                else if(val === 'white') h += 'W';
+                else h += '.';
+            }
+        }
+        return h;
+    }
+    
+    // Executar jogada real
+    function makeMove(row, col, color, isAI = false) {
+        if(!gameActive) return false;
+        if(color !== currentPlayer) return false;
+        if(!isLegalMove(row, col, color)) return false;
+        
+        // Aplica pedra
+        board[row][col] = color;
+        // Atualiza peças restantes
+        if(color === 'black') remainingBlack--;
+        else remainingWhite--;
+        
+        // Captura
+        let captured = captureDeadGroups(color);
+        if(color === 'black') scoreWhite += captured;
+        else scoreBlack += captured;
+        
+        // Atualizar histórico (após captura)
+        pushState();
+        lastMovePos = [row, col];
+        
+        // Verificar se o jogo terminou por falta de peças
+        if((color === 'black' && remainingBlack === 0) || (color === 'white' && remainingWhite === 0)) {
+            endGameByStones();
+            renderGameScreen();
+            return true;
+        }
+        
+        // Mudar turno
+        currentPlayer = (currentPlayer === 'black') ? 'white' : 'black';
+        passCount = 0;
+        renderGameScreen();
+        
+        // Se for modo vs IA e não acabou e é turno da IA
+        if(gameMode === 'pvc' && gameActive && currentPlayer !== humanColor) {
+            setTimeout(() => aiMove(), 50);
+        }
+        return true;
+    }
+    
+    function passTurn() {
+        if(!gameActive) return;
+        passCount++;
+        if(passCount >= 2) {
+            endGameByTerritory();
+        } else {
+            currentPlayer = (currentPlayer === 'black') ? 'white' : 'black';
+            renderGameScreen();
+            if(gameMode === 'pvc' && gameActive && currentPlayer !== humanColor) {
+                setTimeout(() => aiMove(), 50);
+            }
+        }
+    }
+    
+    function endGameByTerritory() {
+        gameActive = false;
+        let { blackTerritory, whiteTerritory } = countTerritory();
+        let finalBlack = scoreBlack + blackTerritory;
+        let finalWhite = scoreWhite + whiteTerritory;
+        let winner = finalBlack > finalWhite ? 'black' : (finalWhite > finalBlack ? 'white' : 'draw');
+        if(winner === 'black') scoreBlack++;
+        else if(winner === 'white') scoreWhite++;
+        alert(`Fim de jogo! Território Pretas: ${blackTerritory} + capturas ${scoreBlack} = ${finalBlack} | Brancas: ${whiteTerritory}+${scoreWhite}=${finalWhite}. Vencedor: ${winner === 'black' ? 'Pretas' : (winner==='white'?'Brancas':'Empate')}`);
+        renderGameScreen();
+    }
+    
+    function endGameByStones() {
+        gameActive = false;
+        let winner = remainingBlack === 0 ? 'white' : 'black';
+        if(winner === 'black') scoreBlack++;
+        else scoreWhite++;
+        alert(`Acabaram as pedras! Vencedor: ${winner === 'black' ? 'Pretas' : 'Brancas'}`);
+        renderGameScreen();
+    }
+    
+    // Contagem territorial simples (sem ko complexo)
+    function countTerritory() {
+        let territoryBlack = 0, territoryWhite = 0;
+        let visited = Array(BOARD_SIZE).fill().map(()=>Array(BOARD_SIZE).fill(false));
+        for(let i=0;i<BOARD_SIZE;i++) {
+            for(let j=0;j<BOARD_SIZE;j++) {
+                if(board[i][j] === null && !visited[i][j]) {
+                    let queue = [[i,j]];
+                    let region = [];
+                    let borderColors = new Set();
+                    visited[i][j] = true;
+                    while(queue.length) {
+                        let [r,c] = queue.shift();
+                        region.push([r,c]);
+                        let neigh = getNeighbors(r,c);
+                        for(let [nr,nc] of neigh) {
+                            if(board[nr][nc] === null && !visited[nr][nc]) {
+                                visited[nr][nc] = true;
+                                queue.push([nr,nc]);
+                            } else if(board[nr][nc] !== null) {
+                                borderColors.add(board[nr][nc]);
+                            }
+                        }
+                    }
+                    if(borderColors.size === 1) {
+                        let color = [...borderColors][0];
+                        if(color === 'black') territoryBlack += region.length;
+                        else territoryWhite += region.length;
+                    }
+                }
+            }
+        }
+        return { blackTerritory: territoryBlack, whiteTerritory: territoryWhite };
+    }
+    
+    // IA: fácil = aleatória legal; média = prioriza captura; difícil = avalia liberdades + centro
+    function aiMove() {
+        if(!gameActive || gameMode !== 'pvc') return;
+        let legalMoves = [];
+        for(let i=0;i<BOARD_SIZE;i++) {
+            for(let j=0;j<BOARD_SIZE;j++) {
+                if(isLegalMove(i,j, currentPlayer)) legalMoves.push([i,j]);
+            }
+        }
+        if(legalMoves.length === 0) {
+            passTurn();
+            return;
+        }
+        let move = null;
+        if(aiDifficulty === 'easy') {
+            move = legalMoves[Math.floor(Math.random()*legalMoves.length)];
+        } else if(aiDifficulty === 'medium') {
+            // Prioriza capturar
+            move = findCaptureMove(legalMoves, currentPlayer);
+            if(!move) move = legalMoves[Math.floor(Math.random()*legalMoves.length)];
+        } else { // hard
+            move = findBestMoveByLiberties(legalMoves, currentPlayer);
+        }
+        if(move) makeMove(move[0], move[1], currentPlayer, true);
+        else passTurn();
+    }
+    
+    function findCaptureMove(legalMoves, color) {
+        for(let [r,c] of legalMoves) {
+            let sim = copyBoard();
+            sim[r][c] = color;
+            let opp = color === 'black' ? 'white' : 'black';
+            let captures = 0;
+            let neigh = getNeighbors(r,c);
+            for(let [nr,nc] of neigh) {
+                if(sim[nr][nc] === opp) {
+                    let group = getGroupOnBoard(nr,nc, sim);
+                    if(getLibertiesOnBoard(group, sim) === 1) captures += group.length;
+                }
+            }
+            if(captures > 0) return [r,c];
+        }
+        return null;
+    }
+    
+    function findBestMoveByLiberties(legalMoves, color) {
+        let bestScore = -Infinity;
+        let bestMove = legalMoves[0];
+        for(let [r,c] of legalMoves) {
+            let sim = copyBoard();
+            sim[r][c] = color;
+            let score = 0;
+            // centro
+            let centerDist = Math.abs(r-4) + Math.abs(c-4);
+            score += (BOARD_SIZE*2 - centerDist);
+            // captura potencial
+            let opp = color === 'black' ? 'white' : 'black';
+            for(let [nr,nc] of getNeighbors(r,c)) {
+                if(sim[nr][nc] === opp) {
+                    let group = getGroupOnBoard(nr,nc, sim);
+                    let libs = getLibertiesOnBoard(group, sim);
+                    if(libs === 1) score += group.length * 10;
+                }
+            }
+            // liberdade da própria pedra
+            let myGroup = getGroupOnBoard(r,c, sim);
+            let myLibs = getLibertiesOnBoard(myGroup, sim);
+            score += myLibs * 3;
+            if(score > bestScore) {
+                bestScore = score;
+                bestMove = [r,c];
+            }
+        }
+        return bestMove;
+    }
+    
+    // Renderização do tabuleiro e toda interface
+    function renderGameScreen() {
+        let boardHTML = `<div class="screen game-screen"><div class="status">♟️ GO (Wéiqí) 9x9 ⚫⚪</div>`;
+        boardHTML += `<div class="board">`;
+        for(let i=0;i<BOARD_SIZE;i++) {
+            for(let j=0;j<BOARD_SIZE;j++) {
+                let stone = board[i][j];
+                let symbol = '';
+                if(stone === 'black') symbol = playerSymbols.black;
+                else if(stone === 'white') symbol = playerSymbols.white;
+                let lastClass = (lastMovePos && lastMovePos[0]===i && lastMovePos[1]===j) ? 'last-move' : '';
+                let legalHint = (gameActive && currentPlayer === (gameMode==='pvc'?humanColor:currentPlayer) && isLegalMove(i,j,currentPlayer)) ? ' style="background:#fffa;"' : '';
+                boardHTML += `<div class="cell ${lastClass}" data-row="${i}" data-col="${j}"${legalHint}>${symbol}</div>`;
+            }
+        }
+        boardHTML += `</div>`;
+        let currentPlayerName = currentPlayer === 'black' ? 'Pretas (⚫)' : 'Brancas (⚪)';
+        boardHTML += `<div class="info-panel">
+            <div class="score-box">🏆 Pretas: ${scoreBlack}<br>Capturas: ${scoreBlack}</div>
+            <div class="turn-box">🎲 Vez: ${currentPlayerName}</div>
+            <div class="score-box">🏆 Brancas: ${scoreWhite}<br>Capturas: ${scoreWhite}</div>
+        </div>`;
+        boardHTML += `<div class="stones-left">🪨 Pedras rest: Pretas ${remainingBlack} | Brancas ${remainingWhite}</div>`;
+        boardHTML += `<div class="inline-buttons">
+            <button class="small-btn" id="passBtn">🙋 Passar</button>
+            <button class="small-btn" id="resetGameBtn">🔄 Reiniciar (reset placar)</button>
+            <button class="small-btn" id="newGameKeepScoreBtn">♻️ Jogar novamente (mesmo placar)</button>
+            <button class="small-btn" id="rulesBtnGame">📜 Regras</button>
+            <button class="small-btn" id="menuBtnGame">🏠 Menu</button>
+        </div>`;
+        boardHTML += `<div id="gameStatusMsg" class="status">${gameActive ? '' : 'JOGO FINALIZADO'}</div></div>`;
+        app.innerHTML = boardHTML;
+        
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', (e) => {
+                let row = parseInt(cell.dataset.row);
+                let col = parseInt(cell.dataset.col);
+                if(gameActive && currentPlayer === (gameMode==='pvc'?humanColor:currentPlayer)) makeMove(row,col,currentPlayer);
+            });
+        });
+        document.getElementById('passBtn')?.addEventListener('click', () => passTurn());
+        document.getElementById('resetGameBtn')?.addEventListener('click', () => resetGame(true));
+        document.getElementById('newGameKeepScoreBtn')?.addEventListener('click', () => resetGame(false));
+        document.getElementById('rulesBtnGame')?.addEventListener('click', showRules);
+        document.getElementById('menuBtnGame')?.addEventListener('click', () => backToMenu());
+    }
+    
+    function resetGame(resetScore = true) {
+        board = Array(BOARD_SIZE).fill().map(()=>Array(BOARD_SIZE).fill(null));
+        currentPlayer = 'black';
+        gameActive = true;
+        remainingBlack = BLACK_STONES;
+        remainingWhite = WHITE_STONES;
+        passCount = 0;
+        lastMovePos = null;
+        previousStates.clear();
+        pushState(); // estado vazio
+        if(resetScore) {
+            scoreBlack = 0;
+            scoreWhite = 0;
+        }
+        if(gameMode === 'pvc' && humanColor !== 'black') {
+            currentPlayer = 'black';
+            setTimeout(() => { if(gameActive && currentPlayer !== humanColor) aiMove(); }, 50);
+        } else if(gameMode === 'pvc' && humanColor === 'black') {
+            // humano começa, tudo certo
+        }
+        renderGameScreen();
+    }
+    
+    function backToMenu() { showMainMenu(); }
+    
+    function showRules() {
+        alert(`REGRAS DO GO (Wéiqí):
+- Jogadores alternam colocando pedras em interseções vazias.
+- Pedras/grupos sem liberdades (adjacentes ortogonalmente a vazios) são capturados.
+- Não é permitido suicídio.
+- Regra Ko: não pode repetir posição anterior do tabuleiro.
+- Dois passes consecutivos encerram: conta território + capturas.
+- Pretas começam com 41 pedras, Brancas 40.
+- Vitória: mais pontos (território + capturas) ou oponente sem pedras.`);
+    }
+    
+    // Tela menu principal
+    function showMainMenu() {
+        app.innerHTML = `<div class="screen menu-screen">
+            <h1>Go ⚫⚪<span style="font-size:2rem;"> 圍棋</span></h1>
+            <div class="subtitle">Wéiqí · Jogo da Circunferência</div>
+            <div class="authors">👥 Criado por Nathan & Éricles</div>
+            <div class="btn-group">
+                <button id="rulesBtn">📖 Regras</button>
+                <button id="pvpBtn">👥 Jogador vs Jogador</button>
+                <button id="pvcBtn">🤖 Jogador vs IA</button>
+            </div>
+        </div>`;
+        document.getElementById('rulesBtn')?.addEventListener('click', showRules);
+        document.getElementById('pvpBtn')?.addEventListener('click', setupPVP);
+        document.getElementById('pvcBtn')?.addEventListener('click', setupPVC);
+    }
+    
+    function setupPVP() {
+        let colors = ['black', 'white'];
+        let symbols = ['X', '◯', '□', '△'];
+        app.innerHTML = `<div class="screen"><h3>Jogador 1 - escolha símbolo e cor</h3><div class="choice-grid" id="p1Symbols"></div><div class="choice-grid" id="p1Colors"></div><button id="nextP2">Próximo</button><button id="backMenu">Voltar</button></div>`;
+        let p1Sym = null, p1Col = null;
+        symbols.forEach(s => {
+            let btn = document.createElement('button');
+            btn.innerText = s; btn.classList.add('choice-btn');
+            btn.onclick = () => { p1Sym = s; document.querySelectorAll('#p1Symbols .choice-btn').forEach(b=>b.style.opacity='0.5'); btn.style.opacity='1'; };
+            document.getElementById('p1Symbols').appendChild(btn);
+        });
+        colors.forEach(c => {
+            let btn = document.createElement('button');
+            btn.innerText = c === 'black' ? '⚫ Preto' : '⚪ Branco';
+            btn.classList.add('choice-btn');
+            btn.onclick = () => { p1Col = c; document.querySelectorAll('#p1Colors .choice-btn').forEach(b=>b.style.opacity='0.5'); btn.style.opacity='1'; };
+            document.getElementById('p1Colors').appendChild(btn);
+        });
+        document.getElementById('nextP2').onclick = () => {
+            if(!p1Sym || !p1Col) { alert('Escolha símbolo e cor'); return; }
+            let p2Col = p1Col === 'black' ? 'white' : 'black';
+            let availableSymbols = symbols.filter(s => s !== p1Sym);
+            app.innerHTML = `<div class="screen"><h3>Jogador 2 - escolha símbolo (cor ${p2Col==='black'?'⚫ Preto':'⚪ Branco'})</h3><div class="choice-grid" id="p2Symbols"></div><button id="startGamePVP">Iniciar Jogo</button><button id="backMenuPVP">Voltar</button></div>`;
+            let p2Sym = null;
+            availableSymbols.forEach(s => {
+                let btn = document.createElement('button');
+                btn.innerText = s; btn.classList.add('choice-btn');
+                btn.onclick = () => { p2Sym = s; document.querySelectorAll('#p2Symbols .choice-btn').forEach(b=>b.style.opacity='0.5'); btn.style.opacity='1'; };
+                document.getElementById('p2Symbols').appendChild(btn);
+            });
+            document.getElementById('startGamePVP').onclick = () => {
+                if(!p2Sym) { alert('Escolha símbolo'); return; }
+                playerSymbols.black = (p1Col === 'black' ? p1Sym : p2Sym);
+                playerSymbols.white = (p1Col === 'white' ? p1Sym : p2Sym);
+                if(p1Col === 'black') { playerSymbols.black = p1Sym; playerSymbols.white = p2Sym; }
+                else { playerSymbols.black = p2Sym; playerSymbols.white = p1Sym; }
+                gameMode = 'pvp';
+                initGame();
+            };
+            document.getElementById('backMenuPVP').onclick = showMainMenu;
+        };
+        document.getElementById('backMenu').onclick = showMainMenu;
+    }
+    
+    function setupPVC() {
+        app.innerHTML = `<div class="screen"><h3>Escolha dificuldade</h3><div class="choice-grid"><button class="choice-btn" data-diff="easy">Fácil</button><button class="choice-btn" data-diff="medium">Médio</button><button class="choice-btn" data-diff="hard">Difícil</button></div><button id="backMenuPVC">Voltar</button></div>`;
+        document.querySelectorAll('[data-diff]').forEach(btn => {
+            btn.onclick = () => {
+                aiDifficulty = btn.dataset.diff;
+                choosePiecesAndColorPVC();
+            };
+        });
+        document.getElementById('backMenuPVC').onclick = showMainMenu;
+    }
+    
+    function choosePiecesAndColorPVC() {
+        let symbols = ['X', '◯', '□', '△'];
+        app.innerHTML = `<div class="screen"><h3>Escolha seu símbolo</h3><div class="choice-grid" id="humanSym"></div><button id="nextColorPVC">Próximo</button><button id="backPVC">Voltar</button></div>`;
+        let humanSym = null;
+        symbols.forEach(s => {
+            let btn = document.createElement('button');
+            btn.innerText = s; btn.classList.add('choice-btn');
+            btn.onclick = () => { humanSym = s; document.querySelectorAll('#humanSym .choice-btn').forEach(b=>b.style.opacity='0.5'); btn.style.opacity='1'; };
+            document.getElementById('humanSym').appendChild(btn);
+        });
+        document.getElementById('nextColorPVC').onclick = () => {
+            if(!humanSym) { alert('Escolha símbolo'); return; }
+            app.innerHTML = `<div class="screen"><h3>Sua cor</h3><div class="choice-grid"><button class="choice-btn" data-col="black">⚫ Preta (começa)</button><button class="choice-btn" data-col="white">⚪ Branca (IA começa)</button></div><button id="backColorPVC">Voltar</button></div>`;
+            document.querySelectorAll('[data-col]').forEach(btn => {
+                btn.onclick = () => {
+                    humanColor = btn.dataset.col;
+                    let aiColor = humanColor === 'black' ? 'white' : 'black';
+                    playerSymbols[humanColor] = humanSym;
+                    playerSymbols[aiColor] = (humanSym === 'X' ? '◯' : (humanSym === '◯' ? '□' : (humanSym === '□' ? '△' : 'X')));
+                    gameMode = 'pvc';
+                    initGame();
+                };
+            });
+            document.getElementById('backColorPVC').onclick = () => setupPVC();
+        };
+        document.getElementById('backPVC').onclick = () => setupPVC();
+    }
+    
+    function initGame() {
+        board = Array(BOARD_SIZE).fill().map(()=>Array(BOARD_SIZE).fill(null));
+        currentPlayer = 'black';
+        gameActive = true;
+        remainingBlack = BLACK_STONES;
+        remainingWhite = WHITE_STONES;
+        scoreBlack = 0; scoreWhite = 0;
+        passCount = 0;
+        previousStates.clear();
+        pushState();
+        renderGameScreen();
+        if(gameMode === 'pvc' && humanColor !== 'black') setTimeout(() => { if(gameActive && currentPlayer !== humanColor) aiMove(); }, 100);
+    }
+    
+    showMainMenu();
+</script>
+</body>
+</html>
