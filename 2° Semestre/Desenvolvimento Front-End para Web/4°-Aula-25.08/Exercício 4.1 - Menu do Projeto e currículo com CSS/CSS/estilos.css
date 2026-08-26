@@ -1,0 +1,93 @@
+/* Teste de */
+#apresentação {
+    background-color: green;
+}
+
+.destaque {
+    background-color: #ffe066;
+    color: #000000;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+strong {
+    color: red;
+}
+
+/* Títulos */
+h1, h2, h3, h4, h5, h6 {
+    color: #1a252f;
+    font-family: Arial, sans-serif;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: 2rem;
+    border-bottom: 2px solid #2c3e50;
+    padding-bottom: 8px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+/* Parágrafos */
+p {
+    color: #333333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+/* Links */
+a {
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #004499;
+    text-decoration: underline;
+}
+
+/* Listas */
+ul, ol {
+    margin-bottom: 15px;
+    padding-left: 24px;
+}
+
+li {
+    color: #2c3e50;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    padding: 10px 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #1a252f;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
