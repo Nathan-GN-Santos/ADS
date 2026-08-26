@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício - Canvas e SVG</title>
+    <link rel="stylesheet" href="../CSS/estilos.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">Menu</a> |
+        <a href="curriculo.html">Currículo</a> |
+        <a href="formulario.html">Formulário</a> |
+        <a href="multimidia.html">Multimídia</a> |
+        <a href="graficos.html">Gráficos</a>
+    </nav>
+
+    <main>
+        <h1>Gráficos Web: Canvas e SVG</h1>
+
+      
+        <section>
+            <h2>Desenho com Canvas</h2>
+         
+            <canvas id="desenho" width="400" height="200"></canvas>
+
+          
+            <script>
+                const canvas = document.getElementById('desenho');
+                const ctx = canvas.getContext('2d');
+                
+                // Retângulo Verde
+                ctx.fillStyle = '#009440';
+                ctx.fillRect(60, 50, 290, 200);
+
+                // Círculo Azul
+                ctx.beginPath();
+                ctx.arc(200, 125, 50, 0, Math.PI * 2);
+                ctx.fillStyle = '#002776';
+                ctx.fill();
+            </script>
+        </section>
+
+    </main>
+
+</body>
+</html>
