@@ -1,0 +1,1 @@
+tag section devem conter heading elements h2-h6 contarem como identificadores para <section>. Otherwise, it's used <div>
