@@ -26,6 +26,8 @@ aluguel[
 
 Tabela Alugue
 
+Tabela Alugue
+
 CREATE TABLE Aluguel (
     id_aluguel INT PRIMARY KEY AUTO_INCREMENT,
     id_cliente INT NOT NULL,
@@ -44,6 +46,9 @@ CREATE TABLE Filme (
     id_filme INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
 )
+
+
+/* Learning 
 
 
 /* Learning 
