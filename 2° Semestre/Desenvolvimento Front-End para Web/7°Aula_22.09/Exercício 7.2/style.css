@@ -1,0 +1,196 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* A página inteira como grade: quatro áreas nomeadas em duas colunas,
+   rodapé sempre embaixo */
+body {
+  font-family: system-ui, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  display: grid;
+  grid-template-areas:
+    "topo topo"
+    "lado conteudo"
+    "rodape rodape";
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+.cabecalho {
+  grid-area: topo;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  background: #2980b9;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.titulo {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.menu-lista {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.menu-lista a {
+  display: block;
+  padding: 0.75rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.menu-lista a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-lista a:focus {
+  outline: 2px solid #f1c40f;
+  outline-offset: 2px;
+}
+
+.menu-lista .ativo {
+  border-bottom: 3px solid #f1c40f;
+  border-radius: 0;
+}
+
+.lateral {
+  grid-area: lado;
+  background: #f0f4f8;
+  padding: 1.5rem 1rem;
+}
+
+.lateral-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2980b9;
+  margin-bottom: 0.75rem;
+}
+
+.lateral-lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.lateral-lista a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.lateral-lista a:hover {
+  background: #dde7f0;
+}
+
+main {
+  grid-area: conteudo;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 35vh;
+  background: #f8f9fa;
+  text-align: center;
+  padding: 1rem;
+}
+
+.hero h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Galeria herdada em flex: quebra linha, mas depende de basis fixo */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card h3 {
+  color: #3498db;
+  margin-bottom: 0.5rem;
+  overflow-wrap: break-word;
+}
+
+/* Agenda: visual pronto, layout a decidir */
+.agenda {
+  padding: 0 2rem 2rem;
+}
+
+.agenda-titulo {
+  font-size: 1.1rem;
+  color: #2980b9;
+  margin-bottom: 0.75rem;
+}
+
+.agenda-lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.agenda-item {
+ background: #fff;
+  border: 1px solid #ddd;
+  border-left: 4px solid #2980b9;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; 
+  gap: 0.75rem 1.25rem;
+}
+
+.agenda-item time {
+  font-weight: 700;
+  color: #2980b9;
+  min-width: 60px;
+}
+
+.agenda-item span {
+  color: #666;
+}
+
+.rodape {
+  grid-area: rodape;
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1.5rem;
+}

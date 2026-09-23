@@ -1,12 +1,9 @@
-:root { /*Cores Bandeira Mogi das Cruzes(Pra uso futuro, mas tvz eu n use.)*/
+:root { /*Cores Bandeira Mogi das Cruzes*/
     --mogi-preto: #000000; /* Listra Superior */
     --mogi-branco: #f8f9fa;  /* Listra Central */
     --mogi-vermelho: #D52B1E;  /* Listra Inferior */
     --mogi-azul: #0033A0; /*Triangulo Azul */
     --mogi-ouro: #FFC72C; /*Estrelas*/
-
-    --cor-azul-clarinho: #2b80b9;
-    --cor-azul-escurinho: #1a5276;
 }
 
 * {
@@ -16,29 +13,21 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Rodapé no fim da página (Sticky Footer) */
+/* Etapa 3 — Rodapé no fim da página (Sticky Footer) */
 body {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     background-color: #f8f9fa;
     color: #333;
-
-    grid-template-columns: 1fr 220px;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas: 
-        "topo topo"
-        "conteudo lado"
-        "rodape rodape";
 }
 
 main {
-    grid-area: conteudo;
     flex: 1;
 }
 
 /* Etapa 0 — Estrutura do Cabeçalho e Navegação */
 header {
-    grid-area: topo;
     background-color: #2b80b9;
     color: #ffffff;
     padding: 16px 5%;
@@ -75,33 +64,7 @@ nav a.ativo {
 nav a:hover {
     border-bottom: 2px solid #ffffff; /* Cria aquela "linha" ____ abaixo do objeto*/
 }
-
-/*Aquela sidebar*/
-/*1fr uma fração disponivel daquele espaço # do grid*/ 
-.lateral {
-    grid-area: lado;
-    background-color: #eef2f5;
-    padding: 24px 16px;
-    border-right: 1px solid #e1e8ed;
-}
-
-.lateral nav {
-    display: flex;
-    flex-direction: column;
-    gap: 12x;
-}
-.lateral a {
-    color: --cor-azul-clarinho; 
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-.lateral a:hover {
-    color: #1a5276;
-}
-
-/* — Destaque (.hero) */
+/* Etapa 1 — Destaque (.hero) */
 .hero {
     display: flex;
     flex-direction: column;
@@ -124,7 +87,7 @@ nav a:hover {
     font-size: 1.05rem;
 }
 
-/* Cards em grade flexível */
+/* Etapa 2 — Cards em grade flexível */
 .cards {
     display: flex;
     flex-wrap: wrap;
@@ -174,9 +137,8 @@ nav a:hover {
     font-size: 0.95rem;
 }
 
-/* Estilo do Rodapé */
+/* Etapa 3 — Estilo do Rodapé */
 footer {
-    grid-area: rodape;
     background-color: #333333;
     color: #ffffff;
     text-align: center;
