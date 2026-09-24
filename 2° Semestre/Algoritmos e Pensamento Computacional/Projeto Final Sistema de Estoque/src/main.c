@@ -15,7 +15,7 @@
 #include <ctype.h>
 //#include <windows.h> // <--- Biblioteca necessária para controlar a codificação do console
 
-// Estrutura Estoque
+// Tal Estrutura Estoque
 typedef struct { //estrutura que cria um grupo de variáveis. typedef = Type Definition. 
     int codigo;
     char nome[50];
@@ -25,7 +25,7 @@ typedef struct { //estrutura que cria um grupo de variáveis. typedef = Type Def
     int disponivel; // 1 = Sim, 0 = Não
 } Produto;
 
-// Função de Limpeza 
+// A tal Função de Limpeza 
 void limparBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
