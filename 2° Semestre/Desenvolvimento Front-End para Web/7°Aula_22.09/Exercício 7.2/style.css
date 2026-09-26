@@ -211,8 +211,8 @@ o site deve alterar seu layout.*/
     grid-template-rows: auto auto auto auto;
     grid-template-areas:
       "topo"
-      "conteudo"
       "lado"
+      "conteudo"
       "rodape";
   }
 
