@@ -27,6 +27,19 @@ typedef struct { //estrutura que cria um grupo de variáveis. typedef = Type Def
     int disponivel; // 1 = Sim, 0 = Não
 } Produto;
 
+// FUNÇÕES 
+
+// Cadastrar um produto na lista.
+
+// Listar todos os produtos da lista.
+
+// Exibir os dados de um único produto (recebe uma struct Produto).
+
+// Buscar um produto pelo código (devolve a posição dele na lista, ou -1 se não achar).
+
+// Buscar um produto pelo nome (mesma ideia: devolve a posição na lista, ou -1 se não achar).
+
+
 // A tal Função de Limpeza 
 void limparBuffer() {
     int c;
