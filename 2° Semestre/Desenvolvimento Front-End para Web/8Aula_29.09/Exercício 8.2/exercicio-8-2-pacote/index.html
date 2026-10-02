@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Guia de Locais e Eventos — Início</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <header class="cabecalho">
+    <div class="identidade">
+      <p class="logo">Guia de Locais</p>
+      <p class="titulo">Mogi das Cruzes</p>
+    </div>
+    <nav aria-label="Menu principal">
+      <ul class="menu-lista">
+        <li><a href="index.html" aria-current="page" class="ativo">Início</a></li>
+        <li><a href="#locais">Locais</a></li>
+        <li><a href="#agenda">Eventos</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <aside class="lateral">
+    <nav aria-label="Categorias de locais">
+      <h2 class="lateral-titulo">Explorar</h2>
+      <ul class="lateral-lista">
+        <li><a href="#parques">Parques</a></li>
+        <li><a href="#museus">Museus</a></li>
+        <li><a href="#teatros">Teatros</a></li>
+        <li><a href="#mais">Mais locais</a></li>
+        <li><a href="#agenda">Eventos</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Festival de inverno de Mogi das Cruzes celebra a cultura da cidade</h1>
+        <p>Locais, eventos e programação cultural em um só lugar.</p>
+      </div>
+    </section>
+
+    <div class="locais" id="locais">
+      <section class="categoria" id="parques">
+        <h3 class="categoria-titulo">Parques</h3>
+        <div class="cards">
+          <article class="card com-link">
+            <a href="parque-centenario.html">
+              <img src="local-parque.svg" alt="Área verde do Parque Centenário com árvores e pista de caminhada">
+              <h4>Parque Centenário</h4>
+              <p>Área verde, pista de caminhada e eventos gratuitos.</p>
+              <p class="card-cta">Ver a página do local →</p>
+            </a>
+          </article>
+          <article class="card">
+            <img src="local-jardim.svg" alt="Casa de chá e cerejeiras do Jardim Japonês">
+            <h4>Jardim Japonês</h4>
+            <p>Trilhas sombreadas, lagos e casa de chá.</p>
+          </article>
+          <article class="card">
+            <img src="local-bosque.svg" alt="Anfiteatro ao ar livre do Bosque da Paz">
+            <h4>Bosque da Paz</h4>
+            <p>Picnic, playground e anfiteatro ao ar livre.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="categoria" id="museus">
+        <h3 class="categoria-titulo">Museus</h3>
+        <div class="cards">
+          <article class="card">
+            <img src="local-museu.svg" alt="Fachada do Museu Municipal">
+            <h4>Museu Municipal</h4>
+            <p>Acervo histórico e exposições temporárias.</p>
+          </article>
+          <article class="card">
+            <img src="local-mac.svg" alt="Fachada geométrica do Museu de Arte Contemporânea">
+            <h4>Museu de Arte Contemporânea</h4>
+            <p>Exposições rotativas e acervo permanente.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="categoria" id="teatros">
+        <h3 class="categoria-titulo">Teatros</h3>
+        <div class="cards">
+          <article class="card">
+            <img src="local-teatro.svg" alt="Palco do Teatro Vasconcelos">
+            <h4>Teatro Vasconcelos</h4>
+            <p>Espetáculos de teatro, música e dança.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="categoria" id="mais">
+        <h3 class="categoria-titulo">Mais locais</h3>
+        <div class="cards">
+          <article class="card">
+            <img src="local-mercado.svg" alt="Fachada vermelha do Mercado Municipal">
+            <h4>Mercado Municipal</h4>
+            <p>Produtos locais, gastronomia e feiras temáticas.</p>
+          </article>
+          <article class="card">
+            <img src="local-sesc.svg" alt="Quadra e piscina do Sesc">
+            <h4>Sesc</h4>
+            <p>Atividades esportivas e culturais.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <section class="agenda" id="agenda">
+      <h3 class="agenda-titulo">Próximos eventos</h3>
+      <ul class="agenda-lista">
+        <li class="agenda-item">
+          <time datetime="2026-09-26">26 set</time>
+          <strong>Feira gastronômica</strong>
+          <span>Mercado Municipal</span>
+        </li>
+        <li class="agenda-item">
+          <time datetime="2026-10-03">03 out</time>
+          <strong>Orquestra no parque</strong>
+          <span>Parque Centenário</span>
+        </li>
+        <li class="agenda-item">
+          <time datetime="2026-10-10">10 out</time>
+          <strong>Mostra de cinema</strong>
+          <span>Teatro Vasconcelos</span>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="rodape" id="contato">
+    <p>Guia de Locais e Eventos — Mogi das Cruzes</p>
+    <ul class="rodape-links">
+      <li><a href="mailto:contato@guiadelocais.exemplo.com">contato@guiadelocais.exemplo.com</a></li>
+      <li><a href="https://www.instagram.com" target="_blank">Instagram do guia</a></li>
+      <li><a href="mailto:sugestao@guiadelocais.exemplo.com">Sugerir um local</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

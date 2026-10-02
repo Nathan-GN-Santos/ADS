@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="Fachada do Museu de Arte Contemporânea">
+  <rect width="400" height="200" fill="#eceff4"/>
+  <rect x="70" y="50" width="120" height="110" fill="#5e6472"/>
+  <rect x="210" y="70" width="120" height="90" fill="#8d99ae"/>
+  <rect x="90" y="80" width="30" height="30" fill="#ef8354"/>
+  <circle cx="160" cy="120" r="18" fill="#ee6c4d"/>
+  <path d="M230 130 L270 90 L310 130 Z" fill="#3d5a80"/>
+  <rect x="70" y="160" width="260" height="8" fill="#293241"/>
+  <text x="200" y="188" font-family="Arial, sans-serif" font-size="15" text-anchor="middle" fill="#293241">Museu de Arte Contemporânea</text>
+</svg>

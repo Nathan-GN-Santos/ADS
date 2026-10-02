@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="Fachada do Mercado Municipal">
+  <rect width="400" height="200" fill="#fdf0d5"/>
+  <rect x="60" y="60" width="280" height="100" fill="#c1121f"/>
+  <rect x="60" y="60" width="280" height="100" fill="none" stroke="#780000" stroke-width="4"/>
+  <path d="M50 60 L200 20 L350 60 Z" fill="#780000"/>
+  <rect x="90" y="90" width="40" height="70" fill="#fdf0d5"/>
+  <rect x="180" y="90" width="40" height="70" fill="#fdf0d5"/>
+  <rect x="270" y="90" width="40" height="70" fill="#fdf0d5"/>
+  <rect x="60" y="66" width="280" height="14" fill="#f4d58d"/>
+  <text x="200" y="78" font-family="Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#780000">MERCADO MUNICIPAL</text>
+  <text x="200" y="188" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#5b2121">Mercado Municipal</text>
+</svg>

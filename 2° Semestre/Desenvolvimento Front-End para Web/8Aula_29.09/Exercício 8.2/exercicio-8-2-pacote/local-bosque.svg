@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="Anfiteatro ao ar livre do Bosque da Paz">
+  <rect width="400" height="200" fill="#eaf4e2"/>
+  <circle cx="70" cy="60" r="30" fill="#386641"/>
+  <rect x="64" y="86" width="12" height="34" fill="#5b4636"/>
+  <circle cx="330" cy="56" r="34" fill="#4c9a52"/>
+  <rect x="324" y="86" width="12" height="36" fill="#5b4636"/>
+  <path d="M120 150 A 80 80 0 0 1 280 150" fill="none" stroke="#8d6a4f" stroke-width="10"/>
+  <path d="M140 150 A 60 60 0 0 1 260 150" fill="none" stroke="#a9846a" stroke-width="8"/>
+  <path d="M160 150 A 40 40 0 0 1 240 150" fill="none" stroke="#c49b7a" stroke-width="6"/>
+  <rect x="185" y="140" width="30" height="14" fill="#5b4636"/>
+  <text x="200" y="188" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2d4a33">Bosque da Paz</text>
+</svg>

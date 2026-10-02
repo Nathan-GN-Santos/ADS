@@ -1,0 +1,288 @@
+:root { /*Cores Bandeira Mogi das Cruzes(Pra uso futuro, mas tvz eu n use.)*/
+    --mogi-preto: #000000; /* Listra Superior */
+    --mogi-branco: #f8f9fa;  /* Listra Central */
+    --mogi-vermelho: #D52B1E;  /* Listra Inferior */
+    --mogi-azul: #0033A0; /*Triangulo Azul */
+    --mogi-ouro: #FFC72C; /*Estrelas*/
+
+    --cor-azul-clarinho: #2b80b9;
+    --cor-azul-escurinho: #1a5276;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Rodapé no fim da página (Sticky Footer) */
+body {
+    display: grid;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    color: #333;
+
+    /* MUDANÇA: MOBILE-FIRST. O grid base agora é uma coluna única para o celular. */
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: 
+        "topo"
+        "lado"
+        "conteudo"
+        "rodape";
+    /* CORREÇÃO MOBILE: Previne qualquer vazamento horizontal no body inteiro */
+    overflow-x: hidden; 
+}
+
+main {
+    grid-area: conteudo;
+    /* CORREÇÃO MOBILE: Remove flex: 1 se não estiver usando flex no pai, e garante largura máxima */
+    width: 100%;
+}
+
+/* Estrutura do Cabeçalho e Navegação */
+header {
+    grid-area: topo;
+    background-color: #2b80b9;
+    color: #ffffff;
+    padding: 16px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* MUDANÇA: Permite que no celular o logo e o menu quebrem linha se ficar espremido */
+    flex-wrap: wrap;
+    gap: 15px;
+    /* CORREÇÃO MOBILE: Em telas pequenas, centraliza tudo */
+    text-align: center; 
+}
+
+header .logo {
+    /* CORREÇÃO MOBILE: Garante que o logo ocupe o centro se quebrar a linha */
+    width: 100%; 
+}
+
+header .logo h1 {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+header .logo span {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+    /* MUDANÇA: Evita que o menu estoure no mobile, permitindo scroll horizontal ou quebra */
+    flex-wrap: wrap; 
+    /* CORREÇÃO MOBILE: Centraliza os links do menu principal quando eles quebram de linha e ocupa 100% do espaço */
+    justify-content: center;
+    width: 100%;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    padding-bottom: 4px;
+}
+
+nav a.ativo {
+    border-bottom: 3px solid #f1c40f;
+}
+nav a:hover {
+    border-bottom: 2px solid #ffffff; /* Cria aquela "linha" ____ abaixo do objeto*/
+}
+
+/*Aquela sidebar*/
+/*1fr uma fração disponivel daquele espaço # do grid*/ 
+.lateral {
+    grid-area: lado;
+    background-color: #eef2f5;
+    padding: 16px;
+    /* MUDANÇA: Borda movida para baixo no mobile, pois ele fica no topo */
+    border-bottom: 1px solid #e1e8ed; 
+    border-right: none;
+}
+
+.lateral nav {
+    display: flex;
+    /* MUDANÇA: No mobile, a navegação lateral vira uma linha horizontal (row) */
+    flex-direction: row; 
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+.lateral a {
+    color: var(--cor-azul-clarinho); 
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.lateral a:hover {
+    color: var(--cor-azul-escurinho);
+}
+
+/* — Destaque (.hero) */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 30vh; /* MUDANÇA: Reduzido um pouco para mobile */
+    text-align: center;
+    background-color: #f4f6f8;
+    padding: 40px 20px;
+}
+
+.hero h2 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    color: #555;
+    font-size: 1.05rem;
+}
+
+/* Cards em grade flexível */
+.cards {
+    /* MUDANÇA: ADAPTAÇÃO INTRÍNSECA. Substituímos o Flexbox pelo Grid com repeat e auto-fit, conforme o requisito do layout. */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 40px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* MUDANÇA: Nova classe para o título dos cards ocupar a linha toda no Grid */
+.cards-header {
+    grid-column: 1 / -1; 
+}
+
+.cards h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2b80b9;
+    font-size: 1.8rem;
+}
+
+.cards h2:hover {
+    color: #1a5276;
+    transform: scale(1.02);
+    transition: color 0.3s ease-in-out;
+}
+
+.card {
+    /* MUDANÇA: Retirado o 'flex: 1 1 280px' porque agora o pai é um Grid */
+    background-color: #ffffff;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    /* MUDANÇA: O padding foi removido daqui e passado para .card-conteudo, para a imagem grudar nas bordas */
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* MUDANÇA: Adicionado leve sombra no hover para dar destaque ao link */
+}
+
+/* MUDANÇA: Estilos das imagens placeholders dentro do card */
+.card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* MUDANÇA: Container interno do card para devolver o espaçamento (padding) do texto */
+.card-conteudo {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* MUDANÇA: Estilo para remover a aparência padrão de link do card */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card h3 {
+    color: #2b80b9;
+    margin-bottom: 10px;
+    font-size: 1.15rem;
+}
+
+.card p {
+    color: #555;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    flex: 1; /* MUDANÇA: Empurra o link "Ver a página" para o fundo */
+}
+
+/* MUDANÇA: Estilo do textinho de link dentro do card */
+.link-detalhe {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--cor-azul-clarinho);
+    margin-top: 10px;
+}
+
+/* Estilo do Rodapé */
+footer {
+    grid-area: rodape;
+    background-color: #333333;
+    color: #ffffff;
+    text-align: center;
+    padding: 18px;
+    font-size: 0.9rem;
+}
+
+/* MUDANÇA:  pro desktop */
+/* Quando a tela atinge 768px, o layout muda do empilhado do celular para o layout com barra lateral */
+@media (min-width: 768px) {
+    body {
+        grid-template-columns: 220px 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas: 
+            "topo topo"
+            "lado conteudo"
+            "rodape rodape";
+    }
+
+    /* CORREÇÃO MOBILE: Restaurado o layout flexível do cabeçalho em telas maiores */
+    header {
+        text-align: left;
+    }
+    
+    header .logo {
+        width: auto;
+    }
+
+    nav {
+        width: auto;
+        justify-content: flex-end;
+    }
+
+    .lateral {
+        border-right: 1px solid #e1e8ed;
+        border-bottom: none;
+    }
+
+    .lateral nav {
+        flex-direction: column; /* Volta os links laterais para uma coluna */
+        justify-content: flex-start;
+    }
+}

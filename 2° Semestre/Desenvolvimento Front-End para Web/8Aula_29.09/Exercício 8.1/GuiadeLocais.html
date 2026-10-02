@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Locais — Mogi das Cruzes</title>
+    <link rel="stylesheet" href="estiloGuiadeLocais.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>Guia de Locais</h1>
+            <span>Mogi das Cruzes</span>
+        </div>
+        <nav>
+            <a href="GuiadeLocais.html" class="ativo">Início</a>
+            <a href="#">Locais</a>
+            <a href="#">Eventos</a>
+            <a href="#">Contato</a>
+        </nav>
+    </header>
+
+<aside class="lateral">
+    <nav aria-label="Categorias">
+        <a href="#">Parques</a>
+        <a href="#">Museus</a>
+        <a href="#">Teatros</a>
+        <a href="#">Eventos</a>
+    </nav>
+</aside>
+
+    <main>
+        <!-- Etapa 1: Destaque -->
+        <section class="hero">
+            <h2>Descubra sua cidade</h2>
+            <p>Locais, eventos e programação cultural em um só lugar.</p>
+        </section>
+
+        <!-- Etapa 2: Cards -->
+        <section class="cards">
+            <!-- MUDANÇA: A tag h2 agora tem uma classe ou foi englobada para se alinhar corretamente no novo Grid -->
+            <div class="cards-header">
+                <h2>Locais em destaque</h2>
+            </div>
+            
+            <!-- MUDANÇA: Card 1 transformado em link conforme o Briefing. Adicionado <img /> como placeholder -->
+            <article class="card">
+                <a href="detalhe.html" class="card-link">
+                    <!-- Placeholder: o cliente pode trocar o 'src' para a imagem real depois -->
+                    <img src="https://placehold.co/400x200/cbe1d4/2b80b9?text=Imagem+do+Parque" alt="Placeholder Parque Centenário" class="card-img">
+                    <div class="card-conteudo">
+                        <h3>Parque Centenário</h3>
+                        <p>Área verde, pista de caminhada e eventos gratuitos.</p>
+                        <span class="link-detalhe">Ver a página do local &rarr;</span>
+                    </div>
+                </a>
+            </article>
+
+            <!-- MUDANÇA: Card 2 sem link ainda (conforme regra: "Cards que não têm página ficam como estão") -->
+            <article class="card">
+                <img src="https://placehold.co/400x200/e6dac3/2b80b9?text=Imagem+do+Museu" alt="Placeholder Museu" class="card-img">
+                <div class="card-conteudo">
+                    <h3>Museu Municipal</h3>
+                    <p>Acervo histórico e exposições temporárias.</p>
+                </div>
+            </article>
+
+            <!-- MUDANÇA: Card 3 sem link -->
+            <article class="card">
+                <img src="https://placehold.co/400x200/5e0000/ffffff?text=Imagem+do+Teatro" alt="Placeholder Teatro" class="card-img">
+                <div class="card-conteudo">
+                    <h3>Teatro Vasconcelos</h3>
+                    <p>Espetáculos de teatro, música e dança.</p>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- Etapa 3: Rodapé -->
+    <footer>
+        <p>Guia de Locais e Eventos — Mogi das Cruzes</p>
+    </footer>
+
+</body>
+</html>

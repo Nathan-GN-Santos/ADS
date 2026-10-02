@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="Palco do Teatro Vasconcelos">
+  <rect width="400" height="200" fill="#2d0a14"/>
+  <path d="M0 0 Q 200 40 400 0 L 400 30 Q 200 70 0 30 Z" fill="#8e0e00"/>
+  <path d="M40 0 Q 60 100 40 200 L 0 200 L 0 0 Z" fill="#6a040f"/>
+  <path d="M360 0 Q 340 100 360 200 L 400 200 L 400 0 Z" fill="#6a040f"/>
+  <ellipse cx="200" cy="170" rx="120" ry="18" fill="#5c4033"/>
+  <circle cx="200" cy="120" r="24" fill="#ffd166"/>
+  <rect x="196" y="144" width="8" height="30" fill="#333"/>
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#ffd166">Teatro Vasconcelos</text>
+</svg>

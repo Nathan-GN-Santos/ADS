@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="Quadra e piscina do Sesc">
+  <rect width="400" height="200" fill="#e3f2fd"/>
+  <rect x="40" y="50" width="140" height="110" fill="#1565c0"/>
+  <rect x="55" y="70" width="50" height="50" fill="#fff" opacity="0.85"/>
+  <rect x="115" y="70" width="50" height="50" fill="#fff" opacity="0.85"/>
+  <rect x="220" y="90" width="150" height="70" rx="10" fill="#4fc3f7"/>
+  <path d="M230 115 Q 250 105 270 115 T 310 115 T 360 115" fill="none" stroke="#fff" stroke-width="6"/>
+  <path d="M230 140 Q 250 130 270 140 T 310 140 T 360 140" fill="none" stroke="#fff" stroke-width="6"/>
+  <circle cx="330" cy="45" r="20" fill="#ffb300"/>
+  <text x="200" y="188" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#0d3c6e">Sesc</text>
+</svg>
