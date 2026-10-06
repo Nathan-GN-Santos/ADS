@@ -1,0 +1,1 @@
+O projeto de guia dos exercícios anteriores foi transferido para um repositório próprio.
