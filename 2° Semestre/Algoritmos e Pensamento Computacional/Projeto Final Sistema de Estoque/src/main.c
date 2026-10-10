@@ -46,8 +46,6 @@ void limparBuffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-// FUNÇÕES 
-
 // Exibir os dados de um único produto (recebe uma struct Produto).
 void exibirProduto(Produto prod) {
     printf("\n====================================\n");
@@ -61,7 +59,7 @@ void exibirProduto(Produto prod) {
     printf("====================================\n");
 }
 
-// Buscar um produto pelo código (devolve a posição dele na lista, ou -1 se não achar).
+// 1. Buscar um produto pelo código (devolve a posição dele na lista, ou -1 se não achar).
 int buscarPorCodigo(Produto lista[], int total, int codigo) {
     for (int i = 0; i < total; i++) {
         if (lista[i].codigo == codigo) {
@@ -71,7 +69,7 @@ int buscarPorCodigo(Produto lista[], int total, int codigo) {
     return -1; // Retorna -1 indicando que não foi encontrado
 }
 
-// Buscar um produto pelo nome (mesma ideia: devolve a posição na lista, ou -1 se não achar).
+// 2. Buscar um produto pelo nome (mesma ideia: devolve a posição na lista, ou -1 se não achar).
 int buscarPorNome(Produto lista[], int total, const char *nome) {
     for (int i = 0; i < total; i++) {
         if (strcmp(lista[i].nome, nome) == 0) {
@@ -81,7 +79,7 @@ int buscarPorNome(Produto lista[], int total, const char *nome) {
     return -1; // Retorna -1 se não encontrar
 }
 
-// Cadastrar um produto na lista.
+// 3. Cadastrar um produto na lista.
 int cadastrarProduto(Produto lista[], int total) {
     if (total >= CAPACIDADE) {
         printf("\n[ERRO] A lista de produtos esta cheia (limite de 50 produtos)!\n");
@@ -92,7 +90,7 @@ int cadastrarProduto(Produto lista[], int total) {
 
     printf("\n--- CADASTRO DE PRODUTO ---\n");
 
-    //Validação do Código
+    //4. Validacao do Código
     do {
         printf("Digite o Codigo do produto (inteiro positivo): ");
         scanf("%d", &prod.codigo);
