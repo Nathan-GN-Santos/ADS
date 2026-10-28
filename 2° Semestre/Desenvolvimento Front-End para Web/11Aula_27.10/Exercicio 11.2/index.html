@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia de Locais e Eventos — Mogi das Cruzes</title>
+  <!-- Parte 3: os cards abaixo saem do HTML e passam a vir de dados-guia.json.
+       O script de filtros (filtros.js) também sai — cola.js e scripts.js assumem. -->
+    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="index.css">
+  <script src="filtros.js" defer></script>
+</head>
+<body>
+  <header class="cabecalho">
+    <div class="identidade"><p class="logo">Guia de Locais</p><p class="titulo">Mogi das Cruzes</p></div>
+    <nav aria-label="Menu principal">
+      <ul class="menu-lista">
+        <li><a class="ativo" href="#inicio" aria-current="page">Início</a></li>
+        <li><a href="#locais">Locais</a></li>
+        <li><a href="#agenda">Eventos</a></li>
+        <li><a href="sugerir.html">Sugerir</a></li>
+      </ul>
+    </nav>
+  </header>
+  <aside class="lateral">
+    <h2 class="lateral-titulo">Explorar</h2>
+    <div class="filtros" role="group" aria-label="Filtrar locais por categoria">
+      <button class="ativo" type="button" data-filtro="todos">Todos</button>
+      <button type="button" data-filtro="parques">Parques</button>
+      <button type="button" data-filtro="museus">Museus</button>
+      <button type="button" data-filtro="teatros">Teatros</button>
+    </div>
+  </aside>
+  <main id="inicio">
+    <section class="hero" aria-labelledby="titulo-guia"><div><h1 id="titulo-guia">Descubra sua cidade</h1><p>Locais, eventos e programação cultural em um só lugar.</p></div></section>
+    <img class="hero-foto" src="foto-parque-centenario.svg" alt="Área verde com árvores e caminho">
+    <div class="locais" id="locais">
+      <section class="categoria" id="parques"><h2 class="categoria-titulo">Parques</h2><div class="cards">
+        <article class="card" data-categoria="parques"><img src="local-parque.svg" alt="Área verde do Parque Centenário com árvores e pista"><h3>Parque Centenário</h3><p>Área verde, pista de caminhada e eventos gratuitos.</p></article>
+        <article class="card" data-categoria="parques"><img src="local-jardim.svg" alt="Jardim Japonês com casa de chá e vegetação"><h3>Jardim Japonês</h3><p>Trilhas sombreadas, lagos e espaços de contemplação.</p></article>
+      </div></section>
+      <section class="categoria" id="museus"><h2 class="categoria-titulo">Museus</h2><div class="cards">
+        <article class="card" data-categoria="museus"><img src="local-museu.svg" alt="Fachada do Museu Municipal"><h3>Museu Municipal</h3><p>Acervo histórico e exposições temporárias.</p></article>
+      </div></section>
+      <section class="categoria" id="teatros"><h2 class="categoria-titulo">Teatros</h2><div class="cards">
+        <article class="card" data-categoria="teatros"><img src="local-teatro.svg" alt="Palco do Teatro Vasconcelos iluminado"><h3>Teatro Vasconcelos</h3><p>Espetáculos de teatro, música e dança.</p></article>
+      </div></section>
+    </div>
+    <section class="agenda" id="agenda" aria-labelledby="titulo-agenda"><h2 id="titulo-agenda">Próximos eventos</h2><ul class="agenda-lista"><li class="agenda-item"><time datetime="2026-09-26">26 set</time><strong>Feira gastronômica</strong> <span>Mercado Municipal</span></li><li class="agenda-item"><time datetime="2026-10-03">03 out</time><strong>Orquestra no parque</strong> <span>Parque Centenário</span></li></ul></section>
+  </main>
+  <footer class="rodape" id="contato"><p>Guia de Locais e Eventos — Mogi das Cruzes</p></footer>
+</body>
+</html>

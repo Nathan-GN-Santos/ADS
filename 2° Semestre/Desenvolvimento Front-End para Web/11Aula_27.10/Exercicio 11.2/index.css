@@ -1,0 +1,36 @@
+/* Página inicial do guia — grade com filtros laterais */
+html { scroll-behavior:smooth; }
+body { min-height:100vh; display:grid; grid-template-areas:"topo" "conteudo" "lado" "rodape"; grid-template-columns:1fr; color:var(--texto); background:var(--branco); font-family:system-ui,sans-serif; line-height:1.6; }
+img { display:block; max-width:100%; height:auto; }
+.cabecalho { grid-area:topo; }
+.lateral { grid-area:lado; padding:1.5rem 1rem; background:#f0f4f8; }
+.lateral-titulo { margin-bottom:.75rem; color:var(--azul); font-size:1rem; }
+.filtros { display:flex; flex-wrap:wrap; gap:.25rem; }
+.filtros button { min-height:44px; padding:.75rem; border:0; border-radius:6px; color:var(--azul); background:transparent; font:inherit; text-align:left; cursor:pointer; }
+.filtros button:hover { background:#dde7f0; }
+.filtros button.ativo { color:var(--branco); background:var(--azul); }
+main { grid-area:conteudo; min-width:0; }
+.hero { min-height:35vh; display:flex; align-items:center; justify-content:center; padding:1rem; background:var(--fundo); text-align:center; }
+.hero h1 { margin-bottom:.5rem; font-size:clamp(1.5rem,4vw,3rem); }
+.hero-foto { width:100%; max-height:42vh; object-fit:cover; }
+.locais { padding:1rem 2rem 2rem; }
+.categoria + .categoria { margin-top:1.5rem; }
+.categoria-titulo { margin-bottom:.75rem; color:var(--azul); font-size:1.15rem; }
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem; }
+.card { overflow:hidden; border:1px solid var(--borda); border-radius:8px; background:var(--branco); transition:transform .2s,box-shadow .2s; }
+.card:hover { transform:translateY(-3px); box-shadow:var(--sombra); }
+.card img { width:100%; height:140px; object-fit:cover; }
+.card h3 { margin:1rem 1rem .5rem; color:var(--azul); }
+.card p { margin:0 1rem 1rem; }
+.card a { display:block; margin:0 1rem 1rem; color:var(--azul); font-weight:600; }
+#status-locais { color:#b00020; min-height:1.2em; padding:1rem 2rem 0; }
+.agenda { padding:0 2rem 2rem; }
+.agenda h2 { margin-bottom:.75rem; color:var(--azul); font-size:1.1rem; }
+.agenda-lista { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.5rem; list-style:none; }
+.agenda-item { padding:.75rem 1rem; border:1px solid var(--borda); border-left:4px solid var(--azul); border-radius:6px; }
+.agenda-item time { margin-right:.5rem; color:var(--azul); font-weight:700; }
+.agenda-item span { color:#666; }
+.rodape { grid-area:rodape; }
+[hidden] { display:none; }
+@media (min-width:700px) { body { grid-template-areas:"topo topo" "lado conteudo" "rodape rodape"; grid-template-columns:200px minmax(0,1fr); grid-template-rows:auto 1fr auto; } .filtros { flex-direction:column; } .hero { min-height:42vh; } }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .card { transition:none; } .card:hover { transform:none; } }

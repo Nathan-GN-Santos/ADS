@@ -1,0 +1,18 @@
+/* Página Sugerir — form + lista de sugestões */
+body { min-height:100vh; display:flex; flex-direction:column; color:var(--texto); background:var(--fundo); font-family:system-ui,sans-serif; line-height:1.6; }
+main { flex:1; width:100%; max-width:40rem; margin:0 auto; padding:2rem 1rem; }
+main > p { margin:.25rem 0 1.25rem; }
+form, section { background:var(--branco); border:1px solid var(--borda); border-radius:8px; padding:1.5rem; }
+section { margin-top:1.5rem; }
+label { display:block; font-weight:600; margin-top:1rem; }
+label:first-of-type { margin-top:0; }
+input, textarea { width:100%; padding:.5rem; margin-top:.25rem; border:1px solid var(--borda); border-radius:6px; font:inherit; }
+button[type=submit] { margin-top:1rem; padding:.6rem 1.2rem; border:0; border-radius:6px; background:var(--azul); color:var(--branco); font:inherit; cursor:pointer; }
+button[type=submit]:hover { background:#1a557f; }
+#erro, #saida { min-height:1.2em; margin:.75rem 0 0; }
+.ok { color:#1a7f37; font-weight:600; }
+.erro { color:#b00020; font-weight:600; }
+#lista { list-style:none; }
+#lista li { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.6rem 0; border-bottom:1px solid var(--borda); }
+#lista li:last-child { border-bottom:0; }
+#lista li button { border:1px solid #b00020; background:none; color:#b00020; border-radius:6px; padding:.25rem .6rem; cursor:pointer; }

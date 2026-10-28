@@ -1,0 +1,52 @@
+{
+  "locais": [
+    {
+      "nome": "Parque Centenário",
+      "categoria": "Parques",
+      "filtro": "parques",
+      "descricao": "Área verde, pista de caminhada e eventos gratuitos.",
+      "avaliacao": 4.6,
+      "endereco": "Av. Francisco Ferreira Lopes, s/n — Vila Mogilar",
+      "horario": "Diariamente, 6h às 22h",
+      "destaques": ["Pista de caminhada", "Quadras esportivas", "Eventos gratuitos aos fins de semana"],
+      "imagem": "local-parque.svg",
+      "alt": "Área verde do Parque Centenário com árvores e pista"
+    },
+    {
+      "nome": "Jardim Japonês",
+      "categoria": "Parques",
+      "filtro": "parques",
+      "descricao": "Trilhas sombreadas, lagos e espaços de contemplação.",
+      "avaliacao": 4.7,
+      "endereco": "Parque Centenário — setor leste",
+      "horario": "Diariamente, 8h às 18h",
+      "destaques": ["Casa de chá", "Lagos com carpas", "Bosque de cerejeiras"],
+      "imagem": "local-jardim.svg",
+      "alt": "Jardim Japonês com casa de chá e vegetação"
+    },
+    {
+      "nome": "Museu Municipal",
+      "categoria": "Museus",
+      "filtro": "museus",
+      "descricao": "Acervo histórico e exposições temporárias.",
+      "avaliacao": 4.3,
+      "endereco": "Rua Barão de Jaceguai, 250 — Centro",
+      "horario": "Terça a domingo, 9h às 17h",
+      "destaques": ["Acervo fotográfico da cidade", "Exposições temporárias", "Entrada gratuita"],
+      "imagem": "local-museu.svg",
+      "alt": "Fachada do Museu Municipal"
+    },
+    {
+      "nome": "Teatro Vasconcelos",
+      "categoria": "Teatros",
+      "filtro": "teatros",
+      "descricao": "Espetáculos de teatro, música e dança.",
+      "avaliacao": 4.8,
+      "endereco": "Praça Silvio Romero, 100 — Vila Ipiranga",
+      "horario": "Conforme programação — bilheteria das 14h às 20h",
+      "destaques": ["Sala principal com 450 lugares", "Temporadas de teatro e música", "Café no saguão"],
+      "imagem": "local-teatro.svg",
+      "alt": "Palco do Teatro Vasconcelos iluminado"
+    }
+  ]
+}

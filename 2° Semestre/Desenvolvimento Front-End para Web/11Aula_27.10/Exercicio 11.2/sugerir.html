@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sugerir um local — Guia de Locais e Eventos</title>
+  <script src="scripts-sugerir.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="sugerir.css">
+</head>
+<body>
+  <header class="cabecalho">
+    <div class="identidade"><p class="logo">Guia de Locais</p><p class="titulo">Mogi das Cruzes</p></div>
+    <nav aria-label="Menu principal">
+      <ul class="menu-lista">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="index.html#locais">Locais</a></li>
+        <li><a href="index.html#agenda">Eventos</a></li>
+        <li><a class="ativo" href="sugerir.html" aria-current="page">Sugerir</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Sugerir um local</h1>
+    <p>Conhece um lugar que merece entrar no guia? Conte para a gente.</p>
+    <form id="sugestao">
+      <label for="nome">Seu nome</label>
+      <input type="text" id="nome">
+      <label for="local">Nome do local</label>
+      <input type="text" id="local">
+      <label for="motivo">Por que este local merece entrar no guia?</label>
+      <textarea id="motivo" rows="3"></textarea>
+      <button type="submit">Enviar sugestão</button>
+      <p id="erro"></p>
+      <p id="saida"></p>
+    </form>
+    <section>
+      <h2>Sugestões</h2>
+      <ul id="lista"></ul>
+    </section>
+  </main>
+  <footer class="rodape"><p>Guia de Locais e Eventos — Mogi das Cruzes</p></footer>
+</body>
+</html>
